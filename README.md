@@ -1,6 +1,6 @@
 # Livros CRUD em .NET and Angular
 
-# Como eu criei este projeto
+# Passos que realizei para criar esta aplicação
 
 ## Incializar git no projeto
 
@@ -67,3 +67,42 @@ Comitar estrutura inicial do projeto:
 `git add .`
 
 `git commit -m "feat: Estrutura inicial do backend criado por: dotnet new webapi --language C# --auth None --framework net9.0 --use-controllers --name Livros.API"`
+
+Rodar projeto para testar:
+
+`dotnet watch`
+
+Abrir http://localhost:5225/WeatherForecast
+
+Agora vamos começar a reorganizar os arquivos em diferentes projetos .NET:
+
+- Livros.API (atual, responde HTTPs)
+- Livros.Data (entidades, contexto de banco de dados e migrations)
+- Livros.Reports (relatórios)
+- Livros.Tests (testes unitários)
+
+Poderíamos ter também um projeto "Livros.Domain" porém para simplificar vamos agrupar no projeto Livros.Data.
+
+Criar projeto Licros.Data:
+
+`cd ..` para voltar para a pasta raiz do projeto .NET.
+
+`dotnet new classlib --language C# --framework net9.0 --name Livros.Data`
+
+`cd Livros.Data`
+
+`dotnet new gitignore`
+
+Comitar estrutura inicial do projeto Livros.Data:
+
+`git add .`
+
+`git commit -m "feat: Estrutura inicial do projeto Livros.Data criado por: dotnet new classlib --language C# --framework net9.0 --name Livros.Data"`
+
+Mover arquivo WeatherForecast.cs para a pasta Livros.Data:
+
+`mv ../Livros.API/WeatherForecast.cs ./`
+
+Alterar namespace de WeatherForecast.cs para Livros.Data:
+
+`sed -i 's/Livros.API/Livros.Data/g' WeatherForecast.cs`
