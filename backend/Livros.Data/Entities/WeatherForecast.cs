@@ -1,4 +1,4 @@
-namespace Livros.API;
+namespace Livros.Data.Entities;
 
 public class WeatherForecast
 {

@@ -2,6 +2,11 @@
 
 # Passos que realizei para criar esta aplicação
 
+## Extensões recomendadas do VS Code
+
+- C# Dev kit: https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit
+- IntelliCode for C# Dev Kit: https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.vscodeintellicode-csharp
+
 ## Incializar git no projeto
 
 `git init --initial-branch=main`
@@ -74,6 +79,8 @@ Rodar projeto para testar:
 
 Abrir http://localhost:5225/WeatherForecast
 
+# Criar projeto Livros.Data
+
 Agora vamos começar a reorganizar os arquivos em diferentes projetos .NET:
 
 - Livros.API (atual, responde HTTPs)
@@ -83,7 +90,7 @@ Agora vamos começar a reorganizar os arquivos em diferentes projetos .NET:
 
 Poderíamos ter também um projeto "Livros.Domain" porém para simplificar vamos agrupar no projeto Livros.Data.
 
-Criar projeto Licros.Data:
+Criar projeto Livros.Data:
 
 `cd ..` para voltar para a pasta raiz do projeto .NET.
 
@@ -93,16 +100,178 @@ Criar projeto Licros.Data:
 
 `dotnet new gitignore`
 
+Apagar arquivo `Class1.cs` pois não será utilizado:
+
+`rm Class1.cs`
+
 Comitar estrutura inicial do projeto Livros.Data:
 
 `git add .`
 
 `git commit -m "feat: Estrutura inicial do projeto Livros.Data criado por: dotnet new classlib --language C# --framework net9.0 --name Livros.Data"`
 
-Mover arquivo WeatherForecast.cs para a pasta Livros.Data:
+Mover arquivo WeatherForecast.cs para uma nova pasta Entities do projeto Livros.Data:
 
-`mv ../Livros.API/WeatherForecast.cs ./`
+`mkdir Entities`
+
+`mv ../Livros.API/WeatherForecast.cs ./Entities/`
 
 Alterar namespace de WeatherForecast.cs para Livros.Data:
 
-`sed -i 's/Livros.API/Livros.Data/g' WeatherForecast.cs`
+`sed -i 's/Livros.API/Livros.Data.Entities/g' Entities/WeatherForecast.cs`
+
+Adicionar projeto Livros.Data como referência no projeto Livros.API:
+
+`cd ../Livros.API`
+
+`dotnet add reference ../Livros.Data/Livros.Data.csproj`
+
+Mover arquivo `/angular-net-livros.sln` para `/backend/backend.sln`:
+
+`mv angular-net-livros.sln backend/backend.sln`
+
+Editar o arquivo `backend/backend.sln` e alterar o caminho do projeto Livros.API para `Livros.API/Livros.API.csproj` e o caminho do projeto Livros.Data para `Livros.Data/Livros.Data.csproj`.
+
+Corrigir namespace de WeatherForecast.cs no aruqivo do controller WeatherForecastController.cs adicionando `using Livros.Data.Entities;`.
+
+Rodar solução com watch:
+
+`cd backend`
+
+`dotnet watch --project Livros.API run`
+
+Abrir http://localhost:5225/WeatherForecast
+
+Pronto agora temos nossas entidades em um projeto separado e referenciado no projeto da API.
+
+# Passar lógica da controler para o projeto Livros.Data
+
+É preferível encapsular lógica de negócio em classes e funções que podem ser testadas unitariamente e reutilizadas em outros lugares.
+
+Vamos criar uma pasta Services no projeto Livros.Data para abrigar a lógica de negócio.
+
+`mkdir Services`
+
+`touch Services/WeatherForecastService.cs`
+
+Adicionar a classe WeatherForecastService.cs para que contenha um function que retorne uma lista de WeatherForecast conforme o código encontrado originalmente na Controller WeatherForecastController.cs.
+
+Trecho relevante:
+
+```csharp
+Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        {
+            Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+            TemperatureC = Random.Shared.Next(-20, 55),
+            Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+        })
+        .ToArray();
+
+```
+
+O código do arquivo WeatherForecastService.cs ficará assim:
+
+```csharp
+using Livros.Data.Entities;
+
+namespace Livros.Data.Services;
+
+public class WeatherForecastService
+{
+	private static readonly string[] Summaries = ["Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"];
+
+	public IEnumerable<WeatherForecast> GetWeatherForecasts()
+	{
+		return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+		{
+			Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+			TemperatureC = Random.Shared.Next(-20, 55),
+			Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+		}).ToArray();
+	}
+}
+```
+
+Crie uma interface IWeatherForecastService.cs para que possamos injetar a dependência de WeatherForecastService em outras classes.
+
+`touch Services/IWeatherForecastService.cs`
+
+O conteúdo do arquivo IWeatherForecastService.cs será:
+
+```csharp
+using Livros.Data.Entities;
+
+namespace Livros.Data.Services;
+
+public interface IWeatherForecastService
+{
+	IEnumerable<WeatherForecast> GetWeatherForecasts();
+}
+```
+
+Configure injeção de depedência dinâmica de Services na API editando o arquivo Program.cs do projeto Livros.API:
+
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+
+// Configura injeção de depedência dinâmica de Services
+var servicesAssembly = typeof(Livros.Data.Services.IWeatherForecastService).Assembly;
+Console.WriteLine("Configurando Services para DI do projeto Livros.Data: " + servicesAssembly.FullName);
+foreach (var type in servicesAssembly.GetTypes()
+    .Where(t => t.Namespace == "Livros.Data.Services" && t.IsClass && !t.IsAbstract))
+{
+    var serviceInterface = type.GetInterfaces().FirstOrDefault();
+    if (serviceInterface != null)
+    {
+        builder.Services.AddScoped(serviceInterface, type);
+        Console.WriteLine("Service registrado dinamicamente: " + serviceInterface.Name);
+    }
+}
+```
+
+Altere o controller em WeatherForecastController.cs para chamar o serviço WeatherForecastService:
+
+```csharp
+using Microsoft.AspNetCore.Mvc;
+using Livros.Data.Services;
+
+namespace Livros.API.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+public class WeatherForecastController : ControllerBase
+{
+    private readonly IWeatherForecastService _weatherForecastService;
+
+    public WeatherForecastController(IWeatherForecastService weatherForecastService)
+    {
+        _weatherForecastService = weatherForecastService;
+    }
+
+    [HttpGet]
+    public IActionResult Get()
+    {
+        var forecasts = _weatherForecastService.GetWeatherForecasts();
+        return Ok(forecasts);
+    }
+}
+
+```
+
+A API deve contrinuar functionando na URL http://localhost:5225/WeatherForecast
+
+Comitar alterações:
+
+`cd ../..`
+
+`git add .`
+
+`git commit -m "feat: Lógica de negócio movida para Livros.Data"`
+
+## Sobre o warning de ClearCache e UpdateApplication
+
+Se aparecer um warning: "Expected to find a static method 'ClearCache' or 'UpdateApplication' on type 'Microsoft.AspNetCore.Mvc.ViewFeatures.HtmlAttributePropertyHelper".
+
+Ignore pois é temporário da Microsoft e foi corrigido em .NET 10:
+
+https://stackoverflow.com/questions/79229624/how-to-add-clearcache-or-updateapplication-methods-to-razor-page
