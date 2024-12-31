@@ -35,8 +35,8 @@ Adicionar certificados para TLS local:
 
 # Criar projeto .NET para API
 
-Criar pasta para backend:
-`mkdir backend && cd backend`
+Criar pasta para api:
+`mkdir api && cd api`
 
 Atualizar lista de workloads:
 `dotnet workload update`
@@ -71,7 +71,7 @@ Comitar estrutura inicial do projeto:
 
 `git add .`
 
-`git commit -m "feat: Estrutura inicial do backend criado por: dotnet new webapi --language C# --auth None --framework net9.0 --use-controllers --name Livros.API"`
+`git commit -m "feat: Estrutura inicial do api criado por: dotnet new webapi --language C# --auth None --framework net9.0 --use-controllers --name Livros.API"`
 
 Rodar projeto para testar:
 
@@ -126,19 +126,19 @@ Adicionar projeto Livros.Data como referência no projeto Livros.API:
 
 `dotnet add reference ../Livros.Data/Livros.Data.csproj`
 
-Mover arquivo `/angular-net-livros.sln` para `/backend/backend.sln`:
+Mover arquivo `/angular-net-livros.sln` para `/api/api.sln`:
 
-`mv angular-net-livros.sln backend/backend.sln`
+`mv angular-net-livros.sln api/api.sln`
 
-Editar o arquivo `backend/backend.sln` e alterar o caminho do projeto Livros.API para `Livros.API/Livros.API.csproj` e o caminho do projeto Livros.Data para `Livros.Data/Livros.Data.csproj`.
+Editar o arquivo `api/api.sln` e alterar o caminho do projeto Livros.API para `Livros.API/Livros.API.csproj` e o caminho do projeto Livros.Data para `Livros.Data/Livros.Data.csproj`.
 
 Corrigir namespace de WeatherForecast.cs no aruqivo do controller WeatherForecastController.cs adicionando `using Livros.Data.Entities;`.
 
 Rodar solução com watch:
 
-`cd backend`
+`cd api`
 
-`dotnet watch --project Livros.API run`
+`dotnet watch --project Livros.API`
 
 Abrir http://localhost:5225/WeatherForecast
 
@@ -266,7 +266,23 @@ Comitar alterações:
 
 `git add .`
 
-`git commit -m "feat: Lógica de negócio movida para Livros.Data"`
+`git commit -m "feat: Lógica de negócio movida para Livros.Data com injeção de dependência de Services"`
+
+# Criar projeto Livros.Tests com xUnit
+
+Agora que temos a API funcionando com lógica de negócio em um projeto separado, vamos criar testes unitários para garantir que a lógica de negócio está funcionando corretamente.
+
+Quando formos implementar a lógica de negócio de verdade, poderemos escrever os testes primeiro seguindo a metodologia TDD (Test Driven Development).
+
+Vamos criar um projeto de testes unitários com xUnit:
+
+`cd api`
+
+`dotnet new xunit --language C# --framework net9.0 --name Livros.Tests`
+
+`cd Livros.Tests`
+
+`dotnet new gitignore`
 
 ## Sobre o warning de ClearCache e UpdateApplication
 
