@@ -284,6 +284,12 @@ Vamos criar um projeto de testes unitários com xUnit:
 
 `dotnet new gitignore`
 
+Comitar estrutura inicial do projeto Livros.Tests:
+
+`git add .`
+
+`git commit -m "feat: Estrutura inicial do projeto Livros.Tests criado com: dotnet new xunit --language C# --framework net9.0 --name Livros.Tests"`
+
 ## Sobre o warning de ClearCache e UpdateApplication
 
 Se aparecer um warning: "Expected to find a static method 'ClearCache' or 'UpdateApplication' on type 'Microsoft.AspNetCore.Mvc.ViewFeatures.HtmlAttributePropertyHelper".
