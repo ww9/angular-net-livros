@@ -1,7 +1,7 @@
 var builder = WebApplication.CreateBuilder(args);
 
 // Configura injeção de depedência dinâmica de Services
-var servicesAssembly = typeof(Livros.Application.Services.IWeatherForecastService).Assembly;
+var servicesAssembly = typeof(Livros.Application.Services.ILivroService).Assembly;
 Console.WriteLine("Configurando Services para DI do projeto Livros.Data: " + servicesAssembly.FullName);
 foreach (var type in servicesAssembly.GetTypes()
     .Where(t => t.Namespace == "Livros.Application.Services" && t.IsClass && !t.IsAbstract))

@@ -1,6 +1,6 @@
 namespace Livros.Data.Entities;
 
-public class WeatherForecast
+public class Livro
 {
     public DateOnly Date { get; set; }
 

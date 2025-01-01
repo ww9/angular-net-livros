@@ -486,6 +486,16 @@ Rode testes para verificar que tudo continua funcionando:
 
 `cd ../api/Livros.Tests && dotnet watch test`
 
+Agora resolvi padronizar nomenclaturas para singular de modo que reduza carga cognitiva durante o desenvolvimento.
+
+Para isso vamos renomerar símbolos e arquivos para singular. Não renomeie projetos senão o compilador confunde namespace Livro com entidade Livro.
+
+Comando para pesquisar arquivos plurais:
+
+`find . -name "*Livros*" -not -path "*/Debug/*" -not -path "*obj*"`
+
+Ajuste até testes passarem.
+
 TODO: o próximo passo é renomear a entindade WeatherForecast para Livro e ajustar propriedades, controllers, services e testes.
 
 Comece pelos testes unitários para TDD.

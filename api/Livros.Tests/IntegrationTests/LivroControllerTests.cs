@@ -4,23 +4,23 @@ using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Livros.Tests.IntegrationTests;
 
-public class WeatherForecastControllerTests : IClassFixture<WebApplicationFactory<Program>>
+public class LivroControllerTests : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly WebApplicationFactory<Program> _factory;
     private readonly HttpClient _client;
 
-    public WeatherForecastControllerTests(WebApplicationFactory<Program> factory)
+    public LivroControllerTests(WebApplicationFactory<Program> factory)
     {
         _factory = factory;
         _client = factory.CreateClient();
     }
 
     [Fact]
-    public async Task Get_ReturnsWeatherForecast()
+    public async Task Get_ReturnsLivro()
     {
-        var response = await _client.GetAsync("/weatherforecast");
+        var response = await _client.GetAsync("/livro");
         response.EnsureSuccessStatusCode();
-        var forecasts = await response.Content.ReadFromJsonAsync<IEnumerable<WeatherForecast>>();
+        var forecasts = await response.Content.ReadFromJsonAsync<IEnumerable<Livro>>();
         Assert.NotNull(forecasts);
         Assert.NotEmpty(forecasts);
     }
