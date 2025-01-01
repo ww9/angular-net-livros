@@ -1,6 +1,6 @@
 using Livros.Data.Entities;
 
-namespace Livros.Data.Services;
+namespace Livros.Application.Services;
 
 public class WeatherForecastService : IWeatherForecastService
 {

@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Livros.Data.Services;
+using Livros.Application.Services;
 
 namespace Livros.API.Controllers;
 

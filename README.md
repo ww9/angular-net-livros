@@ -438,11 +438,53 @@ Clique no botão "Refresh Tests" e depois em "Run All Tests" para rodar os teste
 
 Agora você deve ter testes passando tanto de integração quanto unitários.
 
-# Criando project Services para abrigar lógica de negócio
+Comitar alterações:
+
+`git add .`
+
+`git commit -m "test: test: Testes unitários e de integração operacionais"`
+
+# Criar projeto Application para abrigar lógica de negócio
+
+É interessante separar a lógica de negócio das Entities, DbContext e Migrations para que as camadas fiquem melhor separadas e testáveis.
 
 `cd api`
 
-`dotnet new classlib --language C# --framework net9.0 --name Livros.Services`
+`dotnet new classlib --language C# --framework net9.0 --name Livros.Application`
+
+Adicionar projeto de Application na solution:
+
+`dotnet sln add Livros.Application/Livros.Application.csproj`
+
+Crie arquivo .gitignore para o projeto Livros.Application:
+
+`cd Livros.Application`
+
+`dotnet new gitignore`
+
+Remover arquivo Class1.cs pois não será utilizado:
+
+`rm Class1.cs`
+
+Adicionar referência do projeto Livros.Data no projeto Livros.Application:
+
+`dotnet add reference ../Livros.Data/Livros.Data.csproj`
+
+Adicionar referência do projeto Livros.Application no projeto Livros.API e Livros.Tests:
+
+`cd ../Livros.API`
+
+`dotnet add reference ../Livros.Application/Livros.Application.csproj`
+
+`cd ../Livros.Tests`
+
+`dotnet add reference ../Livros.Application/Livros.Application.csproj`
+
+Mova a pasta do projeto Livros.Data/Services para o projeto Livros.Application e ajuste os namespaces.
+
+Rode testes para verificar que tudo continua funcionando:
+
+`cd ../api/Livros.Tests && dotnet watch test`
 
 TODO: o próximo passo é renomear a entindade WeatherForecast para Livro e ajustar propriedades, controllers, services e testes.
 
