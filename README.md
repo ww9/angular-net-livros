@@ -1,5 +1,15 @@
 # Livros CRUD em .NET and Angular
 
+# Comandos úteis para API
+
+`cd api/Livros.Tests && dotnet watch test`
+
+Executa testes de backend e recarrega automaticamente quando um arquivo é criado ou alterado. Bom para TDD.
+
+`cd api && dotnet watch --project Livros.API run`
+
+Executa backend e recarrega automaticamente quando um arquivo é criado ou alterado.
+
 # Passos que realizei para criar esta aplicação
 
 ## Extensões recomendadas do VS Code
@@ -284,11 +294,161 @@ Vamos criar um projeto de testes unitários com xUnit:
 
 `dotnet new gitignore`
 
+Adicionar projeto de Tests na solution:
+
+`cd ../api`
+
+`dotnet sln add Livros.Tests/Livros.Tests.csproj`
+
+Adicione o pacote de testes auxiliar para testes de integração:
+
+`dotnet add package Microsoft.AspNetCore.Mvc.Testing --version 9.0.0`
+
+Adicione referência dos projetos Livros.API e Livros.Data no projeto Livros.Tests:
+
+`cd Livros.Tests`
+
+`dotnet add reference ../Livros.Data/Livros.Data.csproj`
+
+`dotnet add reference ../Livros.API/Livros.API.csproj`
+
+Edite o arquivo de exemplo de teste e insira uma condição para falhar:
+
+`throw new NotImplementedException("Não implementado.");`
+
+Na aba de testes do VS Code, clique em "Refresh Tests" pra recompilar projeto de testes e depois clique em "Run All Tests".
+
+Para rodar testes na linha de comando e recarrergar automaticamente quando arquivos são alterados:
+
+`cd ../api`
+
+`dotnet watch --project ./Livros.Tests/Livros.Tests.csproj test`
+
 Comitar estrutura inicial do projeto Livros.Tests:
 
 `git add .`
 
 `git commit -m "feat: Estrutura inicial do projeto Livros.Tests criado com: dotnet new xunit --language C# --framework net9.0 --name Livros.Tests"`
+
+Agora que temos testes rodando, iremos criar nossos primeiros testes de integração para Controllers e unitários para Services.
+
+`cd Livros.Tests`
+
+`mkdir IntegrationTests`
+
+`mkdir UnitTests`
+
+Vamos começar com testes de integração para o controller WeatherForecastController.
+
+`touch IntegrationTests/WeatherForecastControllerTests.cs`
+
+O conteúdo do arquivo WeatherForecastControllerTests.cs deve ser:
+
+```csharp
+using System.Net.Http.Json;
+using Livros.Data.Entities;
+using Microsoft.AspNetCore.Mvc.Testing;
+
+namespace Livros.Tests.IntegrationTests;
+
+public class WeatherForecastControllerTests : IClassFixture<WebApplicationFactory<Program>>
+{
+    private readonly WebApplicationFactory<Program> _factory;
+    private readonly HttpClient _client;
+
+    public WeatherForecastControllerTests(WebApplicationFactory<Program> factory)
+    {
+        _factory = factory;
+        _client = factory.CreateClient();
+    }
+
+    [Fact]
+    public async Task Get_ReturnsWeatherForecast()
+    {
+        var response = await _client.GetAsync("/weatherforecast");
+        response.EnsureSuccessStatusCode();
+        var forecasts = await response.Content.ReadFromJsonAsync<IEnumerable<WeatherForecast>>();
+        Assert.NotNull(forecasts);
+        Assert.NotEmpty(forecasts);
+    }
+}
+```
+
+É necessário fazer um ajuste em Program.cs do projeto Livros.API para que o projeto de testes possa rodar a API.
+
+Adicione no final do arquivo Program.cs:
+
+```csharp
+// Exportar a classe Program para ser usada em testes de integração
+// Ver: https://learn.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-9.0#basic-tests-with-the-default-webapplicationfactory
+public partial class Program { }
+```
+
+Com isso agora temos testes de integração funcionando que inicializam a API e fazem requisições HTTP.
+
+Vamos proveritar que estamos lidando com testes unitários e vamos mover o arquivo UnitTest1.cs para a pasta UnitTests e renomear para WeatherForecastServiceTests.cs.
+
+`mv UnitTest1.cs UnitTests/WeatherForecastServiceTests.cs`
+
+Abr o arquiivo WeatherForecastServiceTests.cs e altere o conteúdo para:
+
+```csharp
+using Livros.Data.Services;
+
+namespace Livros.Tests.UnitTests
+{
+    public class WeatherForecastServiceTests
+    {
+        private readonly IWeatherForecastService _weatherForecastService;
+
+        public WeatherForecastServiceTests()
+        {
+            _weatherForecastService = new WeatherForecastService();
+        }
+
+        [Fact]
+        public void GetWeatherForecasts_ShouldReturnFiveForecasts()
+        {
+            // Act
+            var forecasts = _weatherForecastService.GetWeatherForecasts();
+
+            // Assert
+            Assert.NotNull(forecasts);
+            Assert.Equal(5, forecasts.Count());
+        }
+
+        [Fact]
+        public void GetWeatherForecasts_ShouldReturnValidForecasts()
+        {
+            // Act
+            var forecasts = _weatherForecastService.GetWeatherForecasts();
+
+            // Assert
+            foreach (var forecast in forecasts)
+            {
+                Assert.InRange(forecast.TemperatureC, -20, 55);
+                Assert.Contains(forecast.Summary, WeatherForecastService.Summaries);
+            }
+        }
+    }
+}
+```
+
+Clique no botão "Refresh Tests" e depois em "Run All Tests" para rodar os testes.
+
+Agora você deve ter testes passando tanto de integração quanto unitários.
+
+# Criando project Services para abrigar lógica de negócio
+
+`cd api`
+
+`dotnet new classlib --language C# --framework net9.0 --name Livros.Services`
+
+TODO: o próximo passo é renomear a entindade WeatherForecast para Livro e ajustar propriedades, controllers, services e testes.
+
+Comece pelos testes unitários para TDD.
+
+Depois subir um servidor SQL Server com Docker e implementar um contexto de banco de dados e migrations.
 
 ## Sobre o warning de ClearCache e UpdateApplication
 

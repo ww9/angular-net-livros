@@ -4,7 +4,7 @@ namespace Livros.Data.Services;
 
 public class WeatherForecastService : IWeatherForecastService
 {
-	private static readonly string[] Summaries = ["Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"];
+	public static readonly string[] Summaries = ["Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"];
 
 	public IEnumerable<WeatherForecast> GetWeatherForecasts()
 	{
