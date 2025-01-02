@@ -55,15 +55,15 @@ public class AutorService : IAutorService
 	public async Task<Autor> GetByCodAsync(int cod)
 	{
 		return await _context.Autores
-			 .Include(a => a.LivroAutores).ThenInclude(las => las.Livro)
-			 .FirstOrDefaultAsync(a => a.Cod == cod);
+			 .Include(a => a.LivroAutores!).ThenInclude(las => las.Livro)
+			 .FirstOrDefaultAsync(a => a.Cod == cod) ?? throw new ValidationException("Autor não encontrado.");
 	}
 
 	// READ (all)
 	public async Task<List<Autor>> GetAllAsync()
 	{
 		return await _context.Autores
-			 .Include(a => a.LivroAutores).ThenInclude(las => las.Livro)
+			 .Include(a => a.LivroAutores!).ThenInclude(las => las.Livro)
 			 .ToListAsync();
 	}
 
