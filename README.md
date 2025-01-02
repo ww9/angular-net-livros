@@ -650,17 +650,3 @@ ng generate interface interfaces/relatorio_por_autor
 ```
 
 Programar UIs de CRUDs com validações e comitar conforme for avançando.
-
-# TODO
-
-- CRUD Livro.
-  - Dropdown múltipla escolha para autores e assuntos.
-  - Tabela com campos para preço por formas de compra.
-  - Ao menos um assunto deve ser selecionado no cadastro/edição do livro.
-- Relatório
-  - Com View do banco depois que migrar para SQLite.
-- Banco
-- Paginação nas GRIDs.
-- Cobertura de código C# com CLI (já funciona no VSCode).
-- Comentar métodos das Controllers da API para incrementar documentação do Swagger.
-- Testes end to end no Angular.
