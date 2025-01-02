@@ -24,7 +24,7 @@ builder.Services.AddDbContext<LivrosContext>(options =>
     options.UseInMemoryDatabase("LivrosDb");
 });
 
-// Configura injeção de depedência dinâmica de Services
+// Configurar injeção de depedência dinâmica de Services
 var servicesAssembly = typeof(Livros.Application.Services.ILivroService).Assembly;
 Console.WriteLine("Configurando Services para DI do projeto Livros.Data: " + servicesAssembly.FullName);
 foreach (var type in servicesAssembly.GetTypes()
