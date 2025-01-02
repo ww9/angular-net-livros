@@ -3,6 +3,20 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("AllowAll", policyBuilder =>
+        {
+            policyBuilder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+    });
+}
+
 builder.Services.AddDbContext<LivrosContext>(options =>
 {
     // Observação: trocar para um banco real quando for para produção
@@ -37,9 +51,9 @@ if (app.Environment.IsDevelopment())
     {
         options.SwaggerEndpoint("/openapi/v1.json", "v1");
     });
-}
 
-// app.UseHttpsRedirection();
+    app.UseCors("AllowAll");
+}
 
 app.MapControllers();
 
