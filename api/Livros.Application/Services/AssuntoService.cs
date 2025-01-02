@@ -1,9 +1,7 @@
-using Livros.Application.Services;
+using Livros.Application.Errors;
 using Livros.Data;
 using Livros.Data.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Livros.Application.Services;
 
@@ -19,6 +17,17 @@ public class AssuntoService : IAssuntoService
 	// CREATE
 	public async Task<Assunto> CreateAsync(Assunto assunto)
 	{
+		// Validar tamanho da descrição
+		if (assunto.Descricao.Length < 3 || assunto.Descricao.Length > 40)
+		{
+			throw new ValidationException("Descrição deve ter entre 3 e 40 caracteres");
+		}
+		// Validar se existe outra descrição igual que não seja a mesma
+		var assuntoExistente = await _context.Assuntos.FirstOrDefaultAsync(a => a.Descricao == assunto.Descricao);
+		if (assuntoExistente != null)
+		{
+			throw new ValidationException("Já existe um outro assunto com essa descrição");
+		}
 		_context.Assuntos.Add(assunto);
 		await _context.SaveChangesAsync();
 		return assunto;
@@ -42,6 +51,17 @@ public class AssuntoService : IAssuntoService
 	// UPDATE
 	public async Task<Assunto> UpdateAsync(Assunto assunto)
 	{
+		// Validar tamanho da descrição
+		if (assunto.Descricao.Length < 3 || assunto.Descricao.Length > 40)
+		{
+			throw new ValidationException("Descrição deve ter entre 3 e 40 caracteres");
+		}
+		// Validar se existe outra descrição igual que não seja a mesma
+		var assuntoExistente = await _context.Assuntos.FirstOrDefaultAsync(a => a.Descricao == assunto.Descricao && a.Cod != assunto.Cod);
+		if (assuntoExistente != null)
+		{
+			throw new ValidationException("Já existe um outro assunto com essa descrição");
+		}
 		_context.Assuntos.Update(assunto);
 		await _context.SaveChangesAsync();
 		return assunto;

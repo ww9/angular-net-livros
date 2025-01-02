@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Livros.Application.Services;
 using Livros.Data.Entities;
+using Livros.API.Helpers;
+using Livros.Application.Errors;
 
 namespace Assuntos.API.Controllers;
 
@@ -57,7 +59,6 @@ public class AssuntoController : ControllerBase
         {
             return BadRequest();
         }
-
         var updatedAssunto = await _service.UpdateAsync(assunto);
         return Ok(updatedAssunto);
     }

@@ -66,6 +66,8 @@ if (app.Environment.IsDevelopment())
     }
 }
 
+app.UseValidationExceptionMiddleware();
+
 app.MapControllers();
 
 app.Run();
