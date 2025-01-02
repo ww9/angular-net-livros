@@ -1,5 +1,7 @@
 # Livros CRUD em .NET and Angular
 
+![screenshot](screenshot.png)
+
 # Comandos úteis
 
 Executar testes: `cd api/Livros.Tests && ASPNETCORE_ENVIRONMENT=Development dotnet watch test`
