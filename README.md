@@ -18,6 +18,7 @@ Executa backend e recarrega automaticamente quando um arquivo é criado ou alter
   - Ao editar não deve permitir que a descrição seja alterada para uma descrição já existente.
   - Ao tentar excluir um assunto que está associado a um livro, deve retornar erro.
 
+- Centralizar gerenciamento de erros no Angular.
 - Comentar métodos das Controllers da API para incrementar documentação do Swagger.
 - Cobertura de código C# com CLI (já funciona no VSCode).
 - Testes end to end no Angular.

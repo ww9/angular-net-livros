@@ -28,7 +28,7 @@ builder.Services.AddDbContext<LivrosContext>(options =>
 var servicesAssembly = typeof(Livros.Application.Services.ILivroService).Assembly;
 Console.WriteLine("Configurando Services para DI do projeto Livros.Data: " + servicesAssembly.FullName);
 foreach (var type in servicesAssembly.GetTypes()
-    .Where(t => t.Namespace == "Livros.Application.Services" && t.IsClass && !t.IsAbstract))
+    .Where(t => t.Namespace == "Livros.Application.Services" && t.IsClass && !t.IsAbstract && t.FullName != null && !t.FullName.Contains("+")))
 {
     var serviceInterface = type.GetInterfaces().FirstOrDefault();
     if (serviceInterface != null)
