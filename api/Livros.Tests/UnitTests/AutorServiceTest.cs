@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using Xunit;
 
+namespace Livros.Tests.UnitTests;
+
 public class AutorServiceTest : BaseTest
 {
 	private AutorService CreateService(LivrosContext context)

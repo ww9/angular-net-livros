@@ -1,3 +1,4 @@
+using Livros.Application.Dtos;
 using Livros.Application.Services;
 using Livros.Data;
 using Livros.Data.Entities;
@@ -18,15 +19,19 @@ public class LivroServiceTest : BaseTest
 		using var context = new LivrosContext(options);
 		var service = CreateService(context);
 
-		var livro = new Livro
+		var livroDto = new LivroDto
 		{
 			Titulo = "Test Livro",
 			Editora = "Test Editora",
 			Edicao = 1,
-			AnoPublicacao = 2021
+			AnoPublicacao = 2021,
+			AssuntoCods = new List<int> { 1 },
+			AutorCods = new List<int> { 1 }
 		};
 
-		var result = await service.CreateAsync(livro);
+
+
+		var result = await service.CreateAsync(livroDto);
 
 		Assert.NotNull(result);
 		Assert.Equal("Test Livro", result.Titulo);
@@ -100,8 +105,18 @@ public class LivroServiceTest : BaseTest
 		context.Livros.Add(livro);
 		await context.SaveChangesAsync();
 
-		livro.Titulo = "Updated Livro";
-		var result = await service.UpdateAsync(livro);
+		var livroDto = new LivroDto
+		{
+			Cod = livro.Cod,
+			Titulo = "Updated Livro",
+			Editora = "Test Editora",
+			Edicao = 1,
+			AnoPublicacao = 2021,
+			AssuntoCods = new List<int> { 1 },
+			AutorCods = new List<int> { 1 }
+		};
+
+		var result = await service.UpdateAsync(livroDto);
 
 		Assert.NotNull(result);
 		Assert.Equal("Updated Livro", result.Titulo);

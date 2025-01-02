@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Livros.Application.Services;
 
-public class Autoreservice : IAutorService
+public class AutorService : IAutorService
 {
 	private readonly LivrosContext _context;
 
-	public Autoreservice(LivrosContext context)
+	public AutorService(LivrosContext context)
 	{
 		_context = context;
 	}
