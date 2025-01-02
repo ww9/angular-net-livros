@@ -9,24 +9,22 @@
 @if (livroList && livroList.length > 0) { <table class="table table-bordered table-striped">
   <thead>
     <tr>
-      <th>Name</th>
-      <th>Email</th>
-      <th>Mobile</th>
-      <th>Age</th>
-      <th>Salary</th>
-      <th>Status</th>
-      <th class="text-center">Action</th>
+      <th>Cod.</th>
+      <th>Título</th>
+      <th>Editora</th>
+      <th>Edição</th>
+      <th>Ano Publicação</th>
+      <th class="text-center">Ações</th>
     </tr>
   </thead>
   <tbody>
     @for (item of livroList; track $index) {
     <tr>
-      <td>{{ item.name | uppercase }}</td>
-      <td>{{ item.email }}</td>
-      <td>{{ item.mobile }}</td>
-      <td>{{ item.age }}</td>
-      <td>{{ item.salary }}</td>
-      <td>{{ item.status }}</td>
+      <td>{{ item.cod }}</td>
+      <td>{{ item.titulo }}</td>
+      <td>{{ item.editora }}</td>
+      <td>{{ item.edicao }}</td>
+      <td>{{ item.anoPublicacao }}</td>
       <td class="text-center">
         <button class="btn btn-primary" (click)="OnEdit(item)"> Editar</button> ||
         <button class="btn btn-danger " (click)="onDelete(item)"> Remover</button>
@@ -45,7 +43,7 @@
 
       <!-- Modal Header -->
       <div class="modal-header bg-info">
-        @if(livroForm.value.id != 0)
+        @if(livroForm.value.cod != 0)
         {
         <h4 class="modal-title">Update Livro</h4>
         }@else {
@@ -92,7 +90,7 @@
 
         <!-- Modal footer -->
         <div class="modal-footer">
-          @if (livroForm.value.id == 0) {
+          @if (livroForm.value.cod == 0) {
           <button type="submit" [disabled]="this.livroForm.invalid" class="btn btn-primary"
             data-bs-dismiss="modal">Save</button>
           }@else {

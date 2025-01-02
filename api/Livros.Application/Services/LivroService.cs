@@ -65,4 +65,50 @@ public class LivroService : ILivroService
 		await _context.SaveChangesAsync();
 		return true;
 	}
+
+	// public seed database with some data
+	public void SeedDatabase()
+	{
+		var autores = new List<Autor>
+		  {
+				new Autor { Nome = "Autor 1" },
+				new Autor { Nome = "Autor 2" }
+		  };
+
+		var livros = new List<Livro>
+		  {
+				new Livro { Titulo = "Livro 1", Editora = "Editora 1", AnoPublicacao = 2021, Edicao = 1 },
+				new Livro { Titulo = "Livro 2", Editora = "Editora 2", AnoPublicacao = 2022, Edicao = 1 }
+		  };
+
+		var assuntos = new List<Assunto>
+		  {
+				new Assunto { Descricao = "Assunto 1" },
+				new Assunto { Descricao = "Assunto 2" }
+		  };
+
+		_context.Autores.AddRange(autores);
+		_context.Livros.AddRange(livros);
+		_context.Assuntos.AddRange(assuntos);
+		_context.SaveChanges();
+
+		var livroAutores = new List<LivroAutor>
+		  {
+				new LivroAutor { LivroCod = livros[0].Cod, AutorCod = autores[0].Cod },
+				new LivroAutor { LivroCod = livros[1].Cod, AutorCod = autores[1].Cod }
+		  };
+
+		var livroAssuntos = new List<LivroAssunto>
+		  {
+				new LivroAssunto { LivroCod = livros[0].Cod, AssuntoCod = assuntos[0].Cod },
+				new LivroAssunto { LivroCod = livros[1].Cod, AssuntoCod = assuntos[1].Cod }
+		  };
+
+		_context.LivroAutores.AddRange(livroAutores);
+		_context.LivroAssuntos.AddRange(livroAssuntos);
+		_context.SaveChanges();
+
+		// Clear entities to avoid cyclic reference
+		_context.ChangeTracker.Clear();
+	}
 }

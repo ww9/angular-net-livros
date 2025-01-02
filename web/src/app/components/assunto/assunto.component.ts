@@ -3,10 +3,10 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Assunto } from '../../models/assunto';
 import { AssuntoService } from '../../services/assunto.service';
 import { CommonModule } from '@angular/common';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-assunto',
-  //standalone: true,
   imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './assunto.component.html',
   styleUrl: './assunto.component.css'
@@ -17,7 +17,7 @@ export class AssuntoComponent implements OnInit {
   empService = inject(AssuntoService);
   assuntoForm: FormGroup = new FormGroup({});
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private toastService: ToastService) { }
   ngOnInit(): void {
     this.setFormState();
     this.getAssuntos();
@@ -45,8 +45,8 @@ export class AssuntoComponent implements OnInit {
   setFormState() {
     this.assuntoForm = this.fb.group({
 
-      Cod: [0],
-      Descricao: ['', [Validators.required]],
+      cod: [0],
+      descricao: ['', [Validators.required]],
 
     });
   }
@@ -54,13 +54,13 @@ export class AssuntoComponent implements OnInit {
   onSubmit() {
     console.log(this.assuntoForm.value);
     if (this.assuntoForm.invalid) {
-      alert('Verifique os campos obrigatórios');
+      this.toastService.showToast('Verifique os campos obrigatórios', 'warning');
       return;
     }
-    if (this.assuntoForm.value.id == 0) {
+    if (this.assuntoForm.value.cod == 0) {
       this.formValues = this.assuntoForm.value;
       this.empService.addAssunto(this.formValues).subscribe((res) => {
-        alert('Assunto cadastrado com sucesso');
+        this.toastService.showToast('Assunto cadastrado com sucesso', 'success');
         this.getAssuntos();
         this.assuntoForm.reset();
         this.closeModal();
@@ -69,7 +69,7 @@ export class AssuntoComponent implements OnInit {
     } else {
       this.formValues = this.assuntoForm.value;
       this.empService.updateAssunto(this.formValues).subscribe((res) => {
-        alert('Assunto atualizado com sucesso');
+        this.toastService.showToast('Assunto atualizado com sucesso', 'success');
         this.getAssuntos();
         this.assuntoForm.reset();
         this.closeModal();
@@ -84,10 +84,10 @@ export class AssuntoComponent implements OnInit {
     this.assuntoForm.patchValue(Assunto);
   }
   onDelete(assunto: Assunto) {
-    const isConfirm = confirm("Tem certeza que deseja remover o assunto " + assunto.Descricao);
+    const isConfirm = confirm("Tem certeza que deseja remover o assunto " + assunto.descricao);
     if (isConfirm) {
-      this.empService.deleteAssunto(assunto.Cod).subscribe((res) => {
-        alert("Assunto removido com sucesso");
+      this.empService.deleteAssunto(assunto.cod).subscribe((res) => {
+        this.toastService.showToast("Assunto removido com sucesso", 'success');
         this.getAssuntos();
       });
     }

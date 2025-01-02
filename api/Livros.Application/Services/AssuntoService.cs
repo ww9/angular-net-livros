@@ -1,10 +1,13 @@
+using Livros.Application.Services;
 using Livros.Data;
 using Livros.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-public class AssuntoService
+namespace Livros.Application.Services;
+
+public class AssuntoService : IAssuntoService
 {
 	private readonly LivrosContext _context;
 

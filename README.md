@@ -2,15 +2,21 @@
 
 # Comandos úteis para API
 
-`cd api/Livros.Tests && dotnet watch test`
+Executar testes: `cd api/Livros.Tests && ASPNETCORE_ENVIRONMENT=Development dotnet watch test`
 
-Executa testes de backend e recarrega automaticamente quando um arquivo é criado ou alterado. Bom para TDD.
+Rodar backend: `cd api && ASPNETCORE_ENVIRONMENT=Development dotnet watch --project Livros.API`
 
-`cd api && dotnet watch --project Livros.API run`
+Rodar frontend: `cd app && ng serve`
 
 Executa backend e recarrega automaticamente quando um arquivo é criado ou alterado.
 
 # TODO
+
+- TODO: próximo passo é implementar validações no CRUD de assuntos.
+
+  - Descrição deve ser obrigatória, única e respeitar limite de caracteres.
+  - Ao editar não deve permitir que a descrição seja alterada para uma descrição já existente.
+  - Ao tentar excluir um assunto que está associado a um livro, deve retornar erro.
 
 - Comentar métodos das Controllers da API para incrementar documentação do Swagger.
 - Cobertura de código C# com CLI (já funciona no VSCode).

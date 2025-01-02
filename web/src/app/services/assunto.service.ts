@@ -16,10 +16,10 @@ export class AssuntoService {
   }
 
   addAssunto(data: any) {
-    return this.http.post(this.apiUrl, data);
+    return this.http.post(this.apiUrl, { Descricao: data.descricao });
   }
   updateAssunto(assunto: Assunto) {
-    return this.http.put(`${this.apiUrl}/${assunto.Cod}`, assunto)
+    return this.http.put(`${this.apiUrl}/${assunto.cod}`, assunto)
   }
   deleteAssunto(cod: number) {
     return this.http.delete(`${this.apiUrl}/${cod}`);

@@ -1,12 +1,3 @@
-
-// @Component({
-//   selector: 'app-livro',
-//   imports: [],
-//   templateUrl: './livro.component.html',
-//   styleUrl: './livro.component.css'
-// })
-
-
 import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Livro } from '../../models/livro';
@@ -55,13 +46,10 @@ export class LivroComponent implements OnInit {
     this.livroForm = this.fb.group({
 
       id: [0],
-      name: ['', [Validators.required]],
-      email: ['', [Validators.required]],
-      mobile: ['', [Validators.required]],
-      age: ['', [Validators.required]],
-      salary: ['', [Validators.required]],
-      status: [false, [Validators.required]]
-
+      titulo: ['', [Validators.required]],
+      editora: ['', [Validators.required]],
+      edicao: [0, [Validators.required]],
+      anoPublicacao: [0, [Validators.required]],
     });
   }
   formValues: any;
@@ -71,7 +59,7 @@ export class LivroComponent implements OnInit {
       alert('Verifique os campos obrigatórios');
       return;
     }
-    if (this.livroForm.value.id == 0) {
+    if (this.livroForm.value.cod == 0) {
       this.formValues = this.livroForm.value;
       this.empService.addLivro(this.formValues).subscribe((res) => {
 
@@ -100,9 +88,9 @@ export class LivroComponent implements OnInit {
     this.livroForm.patchValue(Livro);
   }
   onDelete(livro: Livro) {
-    const isConfirm = confirm("Tem certeza que deseja remover o livro " + livro.name);
+    const isConfirm = confirm("Tem certeza que deseja remover o livro " + livro.titulo);
     if (isConfirm) {
-      this.empService.deleteLivro(livro.id).subscribe((res) => {
+      this.empService.deleteLivro(livro.cod).subscribe((res) => {
         alert("Livro removido com sucesso");
         this.getLivros();
       });

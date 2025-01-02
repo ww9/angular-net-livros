@@ -19,7 +19,7 @@ export class LivroService {
     return this.http.post(this.apiUrl, data);
   }
   updateLivro(livro: Livro) {
-    return this.http.put(`${this.apiUrl}/${livro.id}`, livro)
+    return this.http.put(`${this.apiUrl}/${livro.cod}`, livro)
   }
   deleteLivro(id: number) {
     return this.http.delete(`${this.apiUrl}/${id}`);

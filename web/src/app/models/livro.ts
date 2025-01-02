@@ -1,9 +1,7 @@
 export interface Livro {
-  id: number;
-  name: string;
-  email: string;
-  mobile: string;
-  age: number;
-  salary: number;
-  status: boolean;
+  cod: number;
+  titulo: string;
+  editora: string;
+  edicao: number;
+  anoPublicacao: number;
 }

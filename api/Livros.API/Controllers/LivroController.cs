@@ -7,17 +7,17 @@ namespace Livros.API.Controllers;
 [Route("[controller]")]
 public class LivroController : ControllerBase
 {
-    private readonly ILivroService _livroService;
+    private readonly ILivroService _service;
 
     public LivroController(ILivroService livroService)
     {
-        _livroService = livroService;
+        _service = livroService;
     }
 
     [HttpGet]
     public IActionResult Get()
     {
-        var items = _livroService.GetRandomLivros();
+        var items = _service.GetRandomLivros();
         return Ok(items);
     }
 }
