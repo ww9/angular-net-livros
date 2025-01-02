@@ -79,6 +79,12 @@
                 <option *ngFor="let assunto of allAssuntos" [value]="assunto.cod">{{ assunto.descricao }}</option>
               </select>
             </div>
+            <div class="col-12">
+              <label for="autors" class="form-label">Autores:</label>
+              <select formControlName="autorCods" multiple class="form-control">
+                <option *ngFor="let autor of allAutors" [value]="autor.cod">{{ autor.nome }}</option>
+              </select>
+            </div>
           </div>
         </div>
 

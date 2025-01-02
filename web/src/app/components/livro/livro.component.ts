@@ -7,6 +7,8 @@ import { ToastService } from '../../services/toast.service';
 import { Assunto } from '../../models/assunto';
 import { AssuntoService } from '../../services/assunto.service';
 import { LivroDto } from '../../models/livroDto';
+import { AutorService } from '../../services/autor.service';
+import { Autor } from '../../models/autor';
 
 @Component({
   selector: 'app-livro',
@@ -18,8 +20,10 @@ export class LivroComponent implements OnInit {
   @ViewChild('modalSave') model: ElementRef | undefined;
   livroList: LivroDto[] = [];
   allAssuntos: Assunto[] = [];
+  allAutors: Autor[] = [];
   empService = inject(LivroService);
   assuntoService = inject(AssuntoService);
+  autorService = inject(AutorService);
   livroForm: FormGroup = new FormGroup({});
 
   constructor(private fb: FormBuilder, private toastService: ToastService) { }
@@ -27,11 +31,16 @@ export class LivroComponent implements OnInit {
     this.setFormState();
     this.getLivros();
     this.loadAssuntos();
+    this.loadAutors();
   }
 
   loadAssuntos() {
     this.assuntoService.getAllAssuntos()
       .subscribe(data => this.allAssuntos = data);
+  }
+
+  loadAutors() {
+    this.autorService.getAllAutors().subscribe(data => this.allAutors = data);
   }
 
   openModal() {
@@ -61,6 +70,7 @@ export class LivroComponent implements OnInit {
       edicao: [1, [Validators.required]],
       anoPublicacao: [2025, [Validators.required]],
       assuntoCods: [[]],
+      autorCods: [[]]
     });
   }
   formValues: any;

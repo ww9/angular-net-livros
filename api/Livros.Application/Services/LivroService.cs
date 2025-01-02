@@ -1,4 +1,5 @@
 using Livros.Application.Dtos;
+using Livros.Application.Errors;
 using Livros.Data;
 using Livros.Data.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +30,18 @@ public class LivroService : ILivroService
 
 	public async Task<LivroDto> CreateAsync(LivroDto dto)
 	{
+		if (dto.Titulo.Length < 3 || dto.Titulo.Length > 40)
+		{
+			throw new ValidationException("Título deve ter entre 3 e 40 caracteres");
+		}
+		if (dto.AssuntoCods == null || !dto.AssuntoCods.Any())
+		{
+			throw new ValidationException("Ao menos um assunto deve ser selecionado");
+		}
+		if (dto.AutorCods == null || !dto.AutorCods.Any())
+		{
+			throw new ValidationException("Ao menos um autor deve ser selecionado");
+		}
 		var livro = new Livro
 		{
 			Titulo = dto.Titulo,
@@ -41,6 +54,7 @@ public class LivroService : ILivroService
 
 		// Link Assuntos
 		await UpdateLivroAssuntosAsync(livro, dto.AssuntoCods);
+		await UpdateLivroAutoresAsync(livro, dto.AutorCods);
 		return new LivroDto
 		{
 			Cod = livro.Cod,
@@ -49,6 +63,47 @@ public class LivroService : ILivroService
 			Edicao = livro.Edicao,
 			AnoPublicacao = livro.AnoPublicacao,
 			AssuntoCods = dto.AssuntoCods
+		};
+	}
+
+	public async Task<LivroDto> UpdateAsync(LivroDto dto)
+	{
+		if (dto.Titulo.Length < 3 || dto.Titulo.Length > 40)
+		{
+			throw new ValidationException("Título deve ter entre 3 e 40 caracteres");
+		}
+		if (dto.AssuntoCods == null || !dto.AssuntoCods.Any())
+		{
+			throw new ValidationException("Ao menos um assunto deve ser selecionado");
+		}
+		if (dto.AutorCods == null || !dto.AutorCods.Any())
+		{
+			throw new ValidationException("Ao menos um autor deve ser selecionado");
+		}
+		var livro = await _context.Livros.FirstOrDefaultAsync(l => l.Cod == dto.Cod);
+		if (livro == null) throw new Exception("Livro not found.");
+
+		livro.Titulo = dto.Titulo;
+		livro.Editora = dto.Editora;
+		livro.Edicao = dto.Edicao;
+		livro.AnoPublicacao = dto.AnoPublicacao;
+
+		_context.Livros.Update(livro);
+		await _context.SaveChangesAsync();
+
+		// Re-link Assuntos and Autores
+		await UpdateLivroAssuntosAsync(livro, dto.AssuntoCods);
+		await UpdateLivroAutoresAsync(livro, dto.AutorCods);
+
+		return new LivroDto
+		{
+			Cod = livro.Cod,
+			Titulo = livro.Titulo,
+			Editora = livro.Editora,
+			Edicao = livro.Edicao,
+			AnoPublicacao = livro.AnoPublicacao,
+			AssuntoCods = dto.AssuntoCods,
+			AutorCods = dto.AutorCods
 		};
 	}
 
@@ -72,8 +127,9 @@ public class LivroService : ILivroService
 	public async Task<List<LivroDto>> GetAllAsync()
 	{
 		var livros = await _context.Livros
-			 .Include(l => l.LivroAssuntos)
-			 .ToListAsync();
+			.Include(l => l.LivroAssuntos)
+			.Include(l => l.LivroAutores)
+			.ToListAsync();
 
 		return livros.Select(l => new LivroDto
 		{
@@ -82,35 +138,9 @@ public class LivroService : ILivroService
 			Editora = l.Editora,
 			Edicao = l.Edicao,
 			AnoPublicacao = l.AnoPublicacao,
-			AssuntoCods = l.LivroAssuntos?.Select(a => a.AssuntoCod).ToList() ?? new List<int>()
+			AssuntoCods = l.LivroAssuntos?.Select(a => a.AssuntoCod).ToList() ?? new List<int>(),
+			AutorCods = l.LivroAutores?.Select(a => a.AutorCod).ToList() ?? new List<int>()
 		}).ToList();
-	}
-
-	public async Task<LivroDto> UpdateAsync(LivroDto dto)
-	{
-		var livro = await _context.Livros.FirstOrDefaultAsync(l => l.Cod == dto.Cod);
-		if (livro == null) throw new Exception("Livro not found.");
-
-		livro.Titulo = dto.Titulo;
-		livro.Editora = dto.Editora;
-		livro.Edicao = dto.Edicao;
-		livro.AnoPublicacao = dto.AnoPublicacao;
-
-		_context.Livros.Update(livro);
-		await _context.SaveChangesAsync();
-
-		// Re-link Assuntos
-		await UpdateLivroAssuntosAsync(livro, dto.AssuntoCods);
-
-		return new LivroDto
-		{
-			Cod = livro.Cod,
-			Titulo = livro.Titulo,
-			Editora = livro.Editora,
-			Edicao = livro.Edicao,
-			AnoPublicacao = livro.AnoPublicacao,
-			AssuntoCods = dto.AssuntoCods
-		};
 	}
 	private async Task UpdateLivroAssuntosAsync(Livro livro, List<int> assuntoCods)
 	{
@@ -123,6 +153,21 @@ public class LivroService : ILivroService
 			{
 				LivroCod = livro.Cod,
 				AssuntoCod = assuntoCod
+			});
+		}
+		await _context.SaveChangesAsync();
+	}
+	private async Task UpdateLivroAutoresAsync(Livro livro, List<int> autorCods)
+	{
+		var existing = _context.LivroAutores.Where(la => la.LivroCod == livro.Cod);
+		_context.LivroAutores.RemoveRange(existing);
+
+		foreach (var autorCod in autorCods)
+		{
+			_context.LivroAutores.Add(new LivroAutor
+			{
+				LivroCod = livro.Cod,
+				AutorCod = autorCod
 			});
 		}
 		await _context.SaveChangesAsync();

@@ -7,4 +7,5 @@ public class LivroDto
 	public int? Edicao { get; set; }
 	public int AnoPublicacao { get; set; }
 	public List<int> AssuntoCods { get; set; } = new();
+	public List<int> AutorCods { get; set; } = new();
 }
