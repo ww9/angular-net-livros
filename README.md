@@ -650,11 +650,9 @@ ng generate interface interfaces/relatorio_por_autor
 
 # TODO
 
-- Ao tentar excluir um Assunto que está associado a um livro, deve retornar erro.
-- Centralizar gerenciamento de erros no Angular.
 - Comentar métodos das Controllers da API para incrementar documentação do Swagger.
 - Cobertura de código C# com CLI (já funciona no VSCode).
 - Testes end to end no Angular.
-- Implementar preço do livro dependend oda forma de compra.
+- Implementar preço do livro dependendo da forma de compra.
 - Implementar relatório com View do banco. Isso requer um banco de dados relacional. Pode ser o SQLite.
 - Paginação nas GRIDs.

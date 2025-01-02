@@ -66,7 +66,6 @@ public class LivroService : ILivroService
 		return true;
 	}
 
-	// public seed database with some data
 	public void SeedDatabase()
 	{
 		var autores = new List<Autor>

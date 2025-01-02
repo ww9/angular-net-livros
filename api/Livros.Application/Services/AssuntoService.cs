@@ -70,8 +70,21 @@ public class AssuntoService : IAssuntoService
 	// DELETE
 	public async Task<bool> DeleteAsync(int cod)
 	{
+		// Se assunto não existir com este código, retorna erro.
 		var assunto = await _context.Assuntos.FindAsync(cod);
-		if (assunto == null) return false;
+		if (assunto == null)
+		{
+			throw new ValidationException("Assunto não encontrado.");
+		}
+
+		// Ao tentar excluir um Assunto que está associado a um Livro, deve retornar erro.
+		var assuntoComLivros = await _context.Assuntos
+			.Include(a => a.LivroAssuntos)
+			.FirstOrDefaultAsync(a => a.Cod == cod);
+		if (assuntoComLivros?.LivroAssuntos?.Count > 0)
+		{
+			throw new ValidationException("Não é possível excluir um assunto que está associado a um livro.");
+		}
 
 		_context.Assuntos.Remove(assunto);
 		await _context.SaveChangesAsync();
