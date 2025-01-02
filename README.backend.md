@@ -543,8 +543,3 @@ Se aparecer um warning: "Expected to find a static method 'ClearCache' or 'Updat
 Ignore pois é temporário da Microsoft e foi corrigido em .NET 10:
 
 https://stackoverflow.com/questions/79229624/how-to-add-clearcache-or-updateapplication-methods-to-razor-page
-
-# TODO
-
-- Comentar métodos das controllers para incrementar documentação do Swagger.
-- Cobertura de código com CLI (já funciona no VSCode).

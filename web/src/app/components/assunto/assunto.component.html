@@ -1,0 +1,73 @@
+<div class="row p-2 bg-gradient">
+  <div class="col-6">
+    <h3>Assuntos</h3>
+  </div>
+  <div class="col-6 text-end">
+    <button class="btn btn-success" (click)="openModal()"> Cadastrar Assunto</button>
+  </div>
+</div>
+@if (assuntoList && assuntoList.length > 0) { <table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th>Cod.</th>
+      <th>Descrição</th>
+      <th class="text-center">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (item of assuntoList; track $index) {
+    <tr>
+      <td>{{ item.Cod }}</td>
+      <td>{{ item.Descricao }}</td>
+      <td class="text-center">
+        <button class="btn btn-primary" (click)="OnEdit(item)"> Editar</button> ||
+        <button class="btn btn-danger " (click)="onDelete(item)"> Remover</button>
+      </td>
+    </tr>
+    }
+  </tbody>
+</table>
+}@else {
+<h5 class="text-center p-5">Nenhum assunto encontrado</h5>
+}
+
+<div class="modal" id="modalSave" #modalSave>
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header bg-info">
+        @if(assuntoForm.value.Cod != 0)
+        {
+        <h4 class="modal-title">Alterar Assunto</h4>
+        }@else {
+        <h4 class="modal-title">Cadastrar Assunto</h4>
+        }
+
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="closeModal()"></button>
+      </div>
+      <form [formGroup]="assuntoForm" (ngSubmit)="onSubmit()">
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-12">
+              <input type="text" formControlName="Descricao" Descricao="name" class="form-control"
+                placeholder="Descricao">
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          @if (assuntoForm.value.Cod == 0) {
+          <button type="submit" [disabled]="this.assuntoForm.invalid" class="btn btn-primary"
+            data-bs-dismiss="modal">Cadastrar</button>
+          }@else {
+          <button type="submit" [disabled]="this.assuntoForm.invalid" class="btn btn-success"
+            data-bs-dismiss="modal">Atualizar</button>
+          }
+
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="closeModal()">Close</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

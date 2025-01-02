@@ -55,17 +55,33 @@ Adicione no arquivo `angular.json`:
 "styles": [
     "src/styles.css",
 ],
+"scripts": [
+    "./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+]
 ```
 
 Execute o servidor novamente com `ng serve` e se tudo estiver certo, o bootstrap deve estar funcionando.
 
-Se tudo estiver certo, comite as alterações:
+Se tudo estiver certo, comite as alterações.
+
+# Criar componentes, serviços e interfaces iniciais para livro, autor e assunto
 
 ```bash
-git add .
-git commit -m "Adiciona Angular"
+ng generate component components/livro
+ng generate component components/autor
+ng generate component components/assunto
+ng generate component components/forma
+ng generate component components/relatorio_por_autor
+
+ng generate service services/livro
+ng generate service services/autor
+ng generate service services/assunto
+ng generate service services/forma
+ng generate service services/relatorio_por_autor
+
+ng generate interface interfaces/livro
+ng generate interface interfaces/autor
+ng generate interface interfaces/assunto
+ng generate interface interfaces/forma
+ng generate interface interfaces/relatorio_por_autor
 ```
-
-# TODO
-
-- Testes end to end.
