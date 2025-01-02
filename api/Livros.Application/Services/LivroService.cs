@@ -219,13 +219,18 @@ public class LivroService : ILivroService
 		var autores = new List<Autor>
 		{
 			new Autor { Nome = "J. R. R. Tolkien" },
-			new Autor { Nome = "Miguel de Cervantes Saavedra" }
+			new Autor { Nome = "Miguel de Cervantes Saavedra" },
+			new Autor { Nome = " Frank Herbert" }
 		};
 
 		var livros = new List<Livro>
 		{
 			new Livro { Titulo = "O Senhor dos Anéis", Editora = "Allen & Unwin", AnoPublicacao = 1954, Edicao = 1 },
-			new Livro { Titulo = "Dom Quixote", Editora = "Livraria José Olympio Editora", AnoPublicacao = 1952, Edicao = 1 }
+			new Livro { Titulo = "Dom Quixote", Editora = "Livraria José Olympio Editora", AnoPublicacao = 1952, Edicao = 1 },
+			new Livro { Titulo = "Duna (Crônicas de Duna Livro 1)", Editora = "Editora Aleph", AnoPublicacao = 2015, Edicao = 1 },
+			new Livro { Titulo = "Duna (Crônicas de Duna Livro 2)", Editora = "Editora Aleph", AnoPublicacao = 2015, Edicao = 1 },
+			new Livro { Titulo = "Duna (Crônicas de Duna Livro 3)", Editora = "Editora Aleph", AnoPublicacao = 2015, Edicao = 1 },
+			new Livro { Titulo = "Duna (Crônicas de Duna Livro 4)", Editora = "Editora Aleph", AnoPublicacao = 2015, Edicao = 1 },
 		};
 
 		var assuntos = new List<Assunto>
@@ -255,19 +260,31 @@ public class LivroService : ILivroService
 		var livroAutores = new List<LivroAutor>
 		{
 			new LivroAutor { LivroCod = livros[0].Cod, AutorCod = autores[0].Cod },
-			new LivroAutor { LivroCod = livros[1].Cod, AutorCod = autores[1].Cod }
+			new LivroAutor { LivroCod = livros[1].Cod, AutorCod = autores[1].Cod },
+			new LivroAutor { LivroCod = livros[2].Cod, AutorCod = autores[2].Cod },
+			new LivroAutor { LivroCod = livros[3].Cod, AutorCod = autores[2].Cod },
+			new LivroAutor { LivroCod = livros[4].Cod, AutorCod = autores[2].Cod },
+			new LivroAutor { LivroCod = livros[5].Cod, AutorCod = autores[2].Cod }
 		};
 
 		var livroAssuntos = new List<LivroAssunto>
 		{
 			new LivroAssunto { LivroCod = livros[0].Cod, AssuntoCod = assuntos[0].Cod },
-			new LivroAssunto { LivroCod = livros[1].Cod, AssuntoCod = assuntos[1].Cod }
+			new LivroAssunto { LivroCod = livros[1].Cod, AssuntoCod = assuntos[1].Cod },
+			new LivroAssunto { LivroCod = livros[2].Cod, AssuntoCod = assuntos[5].Cod },
+			new LivroAssunto { LivroCod = livros[3].Cod, AssuntoCod = assuntos[5].Cod },
+			new LivroAssunto { LivroCod = livros[4].Cod, AssuntoCod = assuntos[5].Cod },
+			new LivroAssunto { LivroCod = livros[5].Cod, AssuntoCod = assuntos[5].Cod }
 		};
 
 		var livroFormaCompras = new List<LivroFormaCompra>
 		{
-			new LivroFormaCompra { LivroCod = livros[0].Cod, FormaCompraCod = formacompras[0].Cod, Valor = 10.0 },
-			new LivroFormaCompra { LivroCod = livros[1].Cod, FormaCompraCod = formacompras[1].Cod, Valor = 20.0 }
+			new LivroFormaCompra { LivroCod = livros[0].Cod, FormaCompraCod = formacompras[0].Cod, Valor = 300.0 },
+			new LivroFormaCompra { LivroCod = livros[1].Cod, FormaCompraCod = formacompras[1].Cod, Valor = 250.0 },
+			new LivroFormaCompra { LivroCod = livros[2].Cod, FormaCompraCod = formacompras[2].Cod, Valor = 70.0 },
+			new LivroFormaCompra { LivroCod = livros[3].Cod, FormaCompraCod = formacompras[2].Cod, Valor = 66.0 },
+			new LivroFormaCompra { LivroCod = livros[4].Cod, FormaCompraCod = formacompras[2].Cod, Valor = 76.0 },
+			new LivroFormaCompra { LivroCod = livros[5].Cod, FormaCompraCod = formacompras[2].Cod, Valor = 92.0 }
 		};
 
 		_context.LivroAutores.AddRange(livroAutores);
@@ -275,7 +292,6 @@ public class LivroService : ILivroService
 		_context.LivroFormaCompras.AddRange(livroFormaCompras);
 		_context.SaveChanges();
 
-		// Clear entities to avoid cyclic reference
 		_context.ChangeTracker.Clear();
 	}
 }

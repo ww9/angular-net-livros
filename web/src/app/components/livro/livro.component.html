@@ -95,7 +95,7 @@
               </thead>
               <tbody>
                 <tr *ngFor="let fg of getControls(); let i = index" [formGroupName]="i">
-                  <td>{{ allFormaCompras[i]?.descricao }}</td>
+                  <td>{{ allFormaCompras[i].descricao }}</td>
                   <td>
                     <input type="number" formControlName="valor" />
                   </td>

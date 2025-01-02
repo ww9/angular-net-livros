@@ -1,1 +1,11 @@
+@media print {
+
+  .navbar,
+  .sidebar,
+  .footer,
+  .printButton {
+    display: none !important;
+  }
+}
+
 /* You can add global styles to this file, and also import other style files */
