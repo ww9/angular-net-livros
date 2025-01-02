@@ -20,8 +20,8 @@ public class LivroControllerTests : IClassFixture<WebApplicationFactory<Program>
     {
         var response = await _client.GetAsync("/livro");
         response.EnsureSuccessStatusCode();
-        var forecasts = await response.Content.ReadFromJsonAsync<IEnumerable<Livro>>();
-        Assert.NotNull(forecasts);
-        Assert.NotEmpty(forecasts);
+        var items = await response.Content.ReadFromJsonAsync<IEnumerable<Livro>>();
+        Assert.NotNull(items);
+        Assert.NotEmpty(items);
     }
 }

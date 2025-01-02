@@ -17,7 +17,7 @@ public class LivroController : ControllerBase
     [HttpGet]
     public IActionResult Get()
     {
-        var forecasts = _livroService.GetLivro();
-        return Ok(forecasts);
+        var items = _livroService.GetRandomLivros();
+        return Ok(items);
     }
 }

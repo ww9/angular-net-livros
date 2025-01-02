@@ -1,4 +1,13 @@
+using Livros.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<LivrosContext>(options =>
+{
+    // Observação: trocar para um banco real quando for para produção
+    options.UseInMemoryDatabase("LivrosDb");
+});
 
 // Configura injeção de depedência dinâmica de Services
 var servicesAssembly = typeof(Livros.Application.Services.ILivroService).Assembly;
@@ -24,11 +33,13 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/openapi/v1.json", "v1");
+    });
 }
 
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
+// app.UseHttpsRedirection();
 
 app.MapControllers();
 

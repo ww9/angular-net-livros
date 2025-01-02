@@ -496,11 +496,57 @@ Comando para pesquisar arquivos plurais:
 
 Ajuste até testes passarem.
 
-TODO: o próximo passo é renomear a entindade WeatherForecast para Livro e ajustar propriedades, controllers, services e testes.
+# Criar entidades e DbContext conforme desafio
+
+Crie uma pasta Db dentro de Livros.Data e adicione um arquivo LivrosDbContext.cs.
+
+Crie entidades conforme desafio dentro da pasta Entities.
+
+Adicione referência do pacote EntityFrameworkCore e EntityFrameworkCore.InMemory no projeto Livros.Data:
+
+`cd Livros.Data`
+
+`dotnet add package Microsoft.EntityFrameworkCore`
+
+`dotnet add package Microsoft.EntityFrameworkCore.InMemory`
+
+Crie classes de testes, entidades, DbContext conforme especificado no desafio.
 
 Comece pelos testes unitários para TDD.
 
-Depois subir um servidor SQL Server com Docker e implementar um contexto de banco de dados e migrations.
+Depois de feitas as alterações rode dotnet watch test para verificar se os testes passam.
+
+E também `dotnet run --project Livros.API` para verificar se a API continua funcionando abrindo http://localhost:5225/livro
+
+Quando tudo estiver funcionando comite as alterações.
+
+# Adicionar UI de Swagger para documentação da API
+
+referência: https://learn.microsoft.com/en-us/aspnet/core/fundamentals/openapi/using-openapi-documents?view=aspnetcore-9.0
+
+`dotnet add package Swashbuckle.AspNetCore.SwaggerUi`
+
+Adicione no Program.cs do projeto Livros.API:
+
+```csharp
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/openapi/v1.json", "v1");
+});
+```
+
+Alterar projeto da API com:
+
+```xml
+<PropertyGroup>
+    <OpenApiDocumentsDirectory>$(MSBuildProjectDirectory)</OpenApiDocumentsDirectory>
+    <OpenApiGenerateDocuments>true</OpenApiGenerateDocuments>
+</PropertyGroup>
+```
+
+Rode o projeto e verifique em: http://localhost:5225/swagger/index.html
+
+Comite as alterações se tudo estiver funcionando.
 
 ## Sobre o warning de ClearCache e UpdateApplication
 
@@ -509,3 +555,7 @@ Se aparecer um warning: "Expected to find a static method 'ClearCache' or 'Updat
 Ignore pois é temporário da Microsoft e foi corrigido em .NET 10:
 
 https://stackoverflow.com/questions/79229624/how-to-add-clearcache-or-updateapplication-methods-to-razor-page
+
+# TODO
+
+- Gerar documentação dos métodos com blocos de comentários XML para Swagger.
