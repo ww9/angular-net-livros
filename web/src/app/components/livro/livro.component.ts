@@ -9,6 +9,9 @@ import { AssuntoService } from '../../services/assunto.service';
 import { LivroDto } from '../../models/livroDto';
 import { AutorService } from '../../services/autor.service';
 import { Autor } from '../../models/autor';
+import { FormArray } from '@angular/forms';
+import { FormaCompra } from '../../models/forma_compra';
+import { FormaCompraService } from '../../services/forma_compra.service';
 
 @Component({
   selector: 'app-livro',
@@ -21,9 +24,11 @@ export class LivroComponent implements OnInit {
   livroList: LivroDto[] = [];
   allAssuntos: Assunto[] = [];
   allAutors: Autor[] = [];
+  allFormaCompras: FormaCompra[] = [];
   empService = inject(LivroService);
   assuntoService = inject(AssuntoService);
   autorService = inject(AutorService);
+  formaCompraService = inject(FormaCompraService);
   livroForm: FormGroup = new FormGroup({});
 
   constructor(private fb: FormBuilder, private toastService: ToastService) { }
@@ -32,6 +37,7 @@ export class LivroComponent implements OnInit {
     this.getLivros();
     this.loadAssuntos();
     this.loadAutors();
+    this.loadFormaCompras();
   }
 
   loadAssuntos() {
@@ -41,6 +47,12 @@ export class LivroComponent implements OnInit {
 
   loadAutors() {
     this.autorService.getAllAutors().subscribe(data => this.allAutors = data);
+  }
+
+  loadFormaCompras() {
+    this.formaCompraService.getAllFormaCompras().subscribe(data => {
+      this.allFormaCompras = data;
+    });
   }
 
   openModal() {
@@ -62,6 +74,17 @@ export class LivroComponent implements OnInit {
       this.livroList = res;
     });
   }
+  populateFormaCompraVals(livro: LivroDto) {
+    const array = this.livroForm.get('formaCompraVals') as FormArray;
+    array.clear();
+    this.allFormaCompras.forEach(fc => {
+      const existing = livro.formaCompraVals?.find(x => x.formaCompraCod === fc.cod);
+      array.push(this.fb.group({
+        formaCompraCod: [fc.cod],
+        valor: [existing?.valor || 0],
+      }));
+    });
+  }
   setFormState() {
     this.livroForm = this.fb.group({
       cod: [0],
@@ -70,8 +93,12 @@ export class LivroComponent implements OnInit {
       edicao: [1, [Validators.required]],
       anoPublicacao: [2025, [Validators.required]],
       assuntoCods: [[]],
-      autorCods: [[]]
+      autorCods: [[]],
+      formaCompraVals: this.fb.array([]),
     });
+  }
+  getControls() {
+    return (this.livroForm.get('formaCompraVals') as FormArray).controls;
   }
   formValues: any;
   onSubmit() {
@@ -82,6 +109,7 @@ export class LivroComponent implements OnInit {
     }
     if (this.livroForm.value.cod == 0) {
       this.formValues = this.livroForm.value;
+      this.formValues.formaCompraVals = this.livroForm.value.formaCompraVals;
       this.empService.addLivro(this.formValues).subscribe((res) => {
         this.toastService.showToast('Livro cadastrado com sucesso', 'success');
         this.getLivros();
@@ -105,6 +133,7 @@ export class LivroComponent implements OnInit {
   OnEdit(Livro: LivroDto) {
     this.openModal();
     this.livroForm.patchValue(Livro);
+    this.populateFormaCompraVals(Livro);
   }
   onDelete(livro: LivroDto) {
     const isConfirm = confirm("Tem certeza que deseja remover o livro " + livro.titulo);

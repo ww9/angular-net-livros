@@ -52,9 +52,10 @@ public class LivroService : ILivroService
 		_context.Livros.Add(livro);
 		await _context.SaveChangesAsync();
 
-		// Link Assuntos
 		await UpdateLivroAssuntosAsync(livro, dto.AssuntoCods);
 		await UpdateLivroAutoresAsync(livro, dto.AutorCods);
+		await UpdateLivroFormaComprasAsync(livro, dto.FormaCompraVals);
+
 		return new LivroDto
 		{
 			Cod = livro.Cod,
@@ -91,9 +92,9 @@ public class LivroService : ILivroService
 		_context.Livros.Update(livro);
 		await _context.SaveChangesAsync();
 
-		// Re-link Assuntos and Autores
 		await UpdateLivroAssuntosAsync(livro, dto.AssuntoCods);
 		await UpdateLivroAutoresAsync(livro, dto.AutorCods);
+		await UpdateLivroFormaComprasAsync(livro, dto.FormaCompraVals);
 
 		return new LivroDto
 		{
@@ -120,7 +121,12 @@ public class LivroService : ILivroService
 			Editora = livro.Editora,
 			Edicao = livro.Edicao,
 			AnoPublicacao = livro.AnoPublicacao,
-			AssuntoCods = livro.LivroAssuntos?.Select(a => a.AssuntoCod).ToList() ?? new List<int>()
+			AssuntoCods = livro.LivroAssuntos?.Select(a => a.AssuntoCod).ToList() ?? new List<int>(),
+			FormaCompraVals = livro.FormaCompras?.Select(fc => new FormaCompraValorDto
+			{
+				FormaCompraCod = fc.FormaCompraCod,
+				Valor = fc.Valor
+			}).ToList() ?? new List<FormaCompraValorDto>()
 		};
 	}
 
@@ -129,6 +135,7 @@ public class LivroService : ILivroService
 		var livros = await _context.Livros
 			.Include(l => l.LivroAssuntos)
 			.Include(l => l.LivroAutores)
+		  	.Include(x => x.FormaCompras)
 			.ToListAsync();
 
 		return livros.Select(l => new LivroDto
@@ -139,7 +146,12 @@ public class LivroService : ILivroService
 			Edicao = l.Edicao,
 			AnoPublicacao = l.AnoPublicacao,
 			AssuntoCods = l.LivroAssuntos?.Select(a => a.AssuntoCod).ToList() ?? new List<int>(),
-			AutorCods = l.LivroAutores?.Select(a => a.AutorCod).ToList() ?? new List<int>()
+			AutorCods = l.LivroAutores?.Select(a => a.AutorCod).ToList() ?? new List<int>(),
+			FormaCompraVals = l.FormaCompras?.Select(fc => new FormaCompraValorDto
+			{
+				FormaCompraCod = fc.FormaCompraCod,
+				Valor = fc.Valor
+			}).ToList() ?? new List<FormaCompraValorDto>()
 		}).ToList();
 	}
 	private async Task UpdateLivroAssuntosAsync(Livro livro, List<int> assuntoCods)
@@ -168,6 +180,26 @@ public class LivroService : ILivroService
 			{
 				LivroCod = livro.Cod,
 				AutorCod = autorCod
+			});
+		}
+		await _context.SaveChangesAsync();
+	}
+	private async Task UpdateLivroFormaComprasAsync(Livro livro, List<FormaCompraValorDto> formaCompraVals)
+	{
+		var existing = _context.LivroFormaCompras.Where(fc => fc.LivroCod == livro.Cod);
+		_context.LivroFormaCompras.RemoveRange(existing);
+		foreach (var fc in formaCompraVals)
+		{
+			if (fc.Valor < 0)
+			{
+				var formaCompra = await _context.FormaCompras.FindAsync(fc.FormaCompraCod);
+				throw new ValidationException($"A forma de compra \"{formaCompra?.Descricao}\" deve ter valor positivo ou zero");
+			}
+			_context.LivroFormaCompras.Add(new LivroFormaCompra
+			{
+				LivroCod = livro.Cod,
+				FormaCompraCod = fc.FormaCompraCod,
+				Valor = fc.Valor
 			});
 		}
 		await _context.SaveChangesAsync();

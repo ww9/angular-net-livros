@@ -85,6 +85,23 @@
                 <option *ngFor="let autor of allAutors" [value]="autor.cod">{{ autor.nome }}</option>
               </select>
             </div>
+
+            <table class="table" formArrayName="formaCompraVals">
+              <thead>
+                <tr>
+                  <th>Forma de Compra</th>
+                  <th>Valor</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let fg of getControls(); let i = index" [formGroupName]="i">
+                  <td>{{ allFormaCompras[i]?.descricao }}</td>
+                  <td>
+                    <input type="number" formControlName="valor" />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
 

@@ -5,4 +5,9 @@ export interface LivroDto {
   edicao: number | null;
   anoPublicacao: number;
   assuntoCods: number[];
+  autorCods: number[];
+  formaCompraVals?: Array<{
+    formaCompraCod: number;
+    valor: number;
+  }>;
 }
