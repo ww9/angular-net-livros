@@ -3,10 +3,10 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Livro } from '../../models/livro';
 import { LivroService } from '../../services/livro.service';
 import { CommonModule } from '@angular/common';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-livro',
-  //standalone: true,
   imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './livro.component.html',
   styleUrl: './livro.component.css'
@@ -17,7 +17,7 @@ export class LivroComponent implements OnInit {
   empService = inject(LivroService);
   livroForm: FormGroup = new FormGroup({});
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private toastService: ToastService) { }
   ngOnInit(): void {
     this.setFormState();
     this.getLivros();
@@ -44,26 +44,24 @@ export class LivroComponent implements OnInit {
   }
   setFormState() {
     this.livroForm = this.fb.group({
-
-      id: [0],
+      cod: [0],
       titulo: ['', [Validators.required]],
       editora: ['', [Validators.required]],
-      edicao: [0, [Validators.required]],
-      anoPublicacao: [0, [Validators.required]],
+      edicao: [1, [Validators.required]],
+      anoPublicacao: [2025, [Validators.required]],
     });
   }
   formValues: any;
   onSubmit() {
     console.log(this.livroForm.value);
     if (this.livroForm.invalid) {
-      alert('Verifique os campos obrigatórios');
+      this.toastService.showToast('Verifique os campos obrigatórios', 'warning');
       return;
     }
     if (this.livroForm.value.cod == 0) {
       this.formValues = this.livroForm.value;
       this.empService.addLivro(this.formValues).subscribe((res) => {
-
-        alert('Livro cadastrado com sucesso');
+        this.toastService.showToast('Livro cadastrado com sucesso', 'success');
         this.getLivros();
         this.livroForm.reset();
         this.closeModal();
@@ -72,8 +70,7 @@ export class LivroComponent implements OnInit {
     } else {
       this.formValues = this.livroForm.value;
       this.empService.updateLivro(this.formValues).subscribe((res) => {
-
-        alert('Livro atualizado com sucesso');
+        this.toastService.showToast('Livro atualizado com sucesso', 'success');
         this.getLivros();
         this.livroForm.reset();
         this.closeModal();
@@ -91,7 +88,7 @@ export class LivroComponent implements OnInit {
     const isConfirm = confirm("Tem certeza que deseja remover o livro " + livro.titulo);
     if (isConfirm) {
       this.empService.deleteLivro(livro.cod).subscribe((res) => {
-        alert("Livro removido com sucesso");
+        this.toastService.showToast("Livro removido com sucesso", 'success');
         this.getLivros();
       });
     }

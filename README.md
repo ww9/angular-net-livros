@@ -1,14 +1,12 @@
 # Livros CRUD em .NET and Angular
 
-# Comandos úteis para API
+# Comandos úteis
 
 Executar testes: `cd api/Livros.Tests && ASPNETCORE_ENVIRONMENT=Development dotnet watch test`
 
-Rodar backend: `cd api && ASPNETCORE_ENVIRONMENT=Development dotnet watch --project Livros.API`
+Executar backend: `cd api && ASPNETCORE_ENVIRONMENT=Development dotnet watch --project Livros.API`
 
-Rodar frontend: `cd app && ng serve`
-
-Executa backend e recarrega automaticamente quando um arquivo é criado ou alterado.
+Executar frontend: `cd app && ng serve`
 
 ---
 
@@ -566,8 +564,9 @@ Git já deve estar incializado conforme instruções do README.backend.md.
 
 ## Extensões recomendadas do VS Code
 
-- C# Dev kit: https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit
-- IntelliCode for C# Dev Kit: https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.vscodeintellicode-csharp
+- Angular Language Service (oficial): https://marketplace.visualstudio.com/items?itemName=Angular.ng-template
+- ESLint: https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
+- Prettier: https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
 
 ## Configuração de ambiente Ubuntu 20.04 em WSL2
 
@@ -648,10 +647,16 @@ ng generate interface interfaces/forma_compra
 ng generate interface interfaces/relatorio_por_autor
 ```
 
+Programar UIs de CRUDs com validações e comitar conforme for avançando.
+
 # TODO
 
-- Implementar preço do livro dependendo da forma de compra.
-- Implementar relatório com View do banco. Isso requer um banco de dados relacional. Pode ser o SQLite.
+- CRUD Livro.
+  - Dropdown múltipla escolha para autores e assuntos.
+  - Tabela com campos para preço por formas de compra.
+- Relatório
+  - Com View do banco depois que migrar para SQLite.
+- Banco
 - Paginação nas GRIDs.
 - Cobertura de código C# com CLI (já funciona no VSCode).
 - Comentar métodos das Controllers da API para incrementar documentação do Swagger.

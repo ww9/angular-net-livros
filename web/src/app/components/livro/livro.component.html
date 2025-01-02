@@ -1,4 +1,4 @@
-<div class="row p-2 bg-gradient">
+<div class="row py-2 bg-gradient mt-2 mx-0 rounded-top-2">
   <div class="col-6">
     <h3>Livros</h3>
   </div>
@@ -10,11 +10,8 @@
   <thead>
     <tr>
       <th>Cod.</th>
-      <th>Título</th>
-      <th>Editora</th>
-      <th>Edição</th>
-      <th>Ano Publicação</th>
-      <th class="text-center">Ações</th>
+      <th>Descrição</th>
+      <th class="text-end">Ações</th>
     </tr>
   </thead>
   <tbody>
@@ -22,11 +19,8 @@
     <tr>
       <td>{{ item.cod }}</td>
       <td>{{ item.titulo }}</td>
-      <td>{{ item.editora }}</td>
-      <td>{{ item.edicao }}</td>
-      <td>{{ item.anoPublicacao }}</td>
-      <td class="text-center">
-        <button class="btn btn-primary" (click)="OnEdit(item)"> Editar</button> ||
+      <td class="text-end">
+        <button class="btn btn-primary mx-1" (click)="OnEdit(item)"> Editar</button>
         <button class="btn btn-danger " (click)="onDelete(item)"> Remover</button>
       </td>
     </tr>
@@ -37,68 +31,54 @@
 <h5 class="text-center p-5">Nenhum livro encontrado</h5>
 }
 
-<div class="modal" id="modalSave" #modalSave>
+<div class="modal bg-black bg-opacity-50" id="modalSave" #modalSave>
   <div class="modal-dialog">
     <div class="modal-content">
 
       <!-- Modal Header -->
-      <div class="modal-header bg-info">
+      <div class="modal-header bg-info-subtle">
         @if(livroForm.value.cod != 0)
         {
-        <h4 class="modal-title">Update Livro</h4>
+        <h4 class="modal-title">Alterar Livro</h4>
         }@else {
-        <h4 class="modal-title">Add Livro</h4>
+        <h4 class="modal-title">Cadastrar Livro</h4>
         }
 
         <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="closeModal()"></button>
       </div>
       <form [formGroup]="livroForm" (ngSubmit)="onSubmit()">
-        <!-- Modal body -->
         <div class="modal-body">
           <div class="row">
             <div class="col-12">
-              <input type="text" formControlName="name" name="name" class="form-control" placeholder="Name">
+              <label for="titulo" class="form-label">Título:</label>
+              <input type="text" formControlName="titulo" name="titulo" class="form-control" placeholder="título" />
             </div>
-          </div>
-          <div class="row mt-3">
-            <div class="col-6">
-              <input type="text" formControlName="email" name="email" class="form-control" placeholder="Email">
-            </div>
-            <div class="col-6">
-              <input type="text" formControlName="mobile" name="mobile" class="form-control" placeholder="Mobile">
-            </div>
-          </div>
-
-          <div class="row mt-3">
-            <div class="col-6">
-              <input type="number" formControlName="age" name="age" class="form-control" placeholder="Age">
-            </div>
-            <div class="col-6">
-              <input type="number" formControlName="salary" name="salary" class="form-control" placeholder="Salary">
-            </div>
-          </div>
-          <div class="row mt-3">
             <div class="col-12">
-              <div class="form-group form-check">
-                <input type="checkbox" formControlName="status" name="age" class="form-check-input" placeholder="Age">
-                <label> Active ? </label>
-              </div>
+              <label for="editora" class="form-label">Editora:</label>
+              <input type="text" formControlName="editora" name="editora" class="form-control" placeholder="editora" />
             </div>
-
+            <div class="col-12">
+              <label for="edicao" class="form-label">Edição:</label>
+              <input type="number" formControlName="edicao" name="edicao" class="form-control" placeholder="edição" />
+            </div>
+            <div class="col-12">
+              <label for="edicao" class="form-label">Ano de Publicação:</label>
+              <input type="number" formControlName="anoPublicacao" name="anoPublicacao" class="form-control"
+                placeholder="ano de publicação" />
+            </div>
           </div>
         </div>
 
-        <!-- Modal footer -->
         <div class="modal-footer">
           @if (livroForm.value.cod == 0) {
           <button type="submit" [disabled]="this.livroForm.invalid" class="btn btn-primary"
-            data-bs-dismiss="modal">Save</button>
+            data-bs-dismiss="modal">Cadastrar</button>
           }@else {
           <button type="submit" [disabled]="this.livroForm.invalid" class="btn btn-success"
-            data-bs-dismiss="modal">Update</button>
+            data-bs-dismiss="modal">Atualizar</button>
           }
 
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="closeModal()">Close</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="closeModal()">Fechar</button>
         </div>
       </form>
     </div>

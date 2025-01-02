@@ -19,7 +19,8 @@ public class Livro
 
     public int? Edicao { get; set; }
 
-    [StringLength(4)]
+    [Required]
+    [Range(0, 9999)]
     public required int AnoPublicacao { get; set; }
 
     public virtual ICollection<LivroAutor>? LivroAutores { get; set; }
