@@ -4,6 +4,9 @@ import { Livro } from '../../models/livro';
 import { LivroService } from '../../services/livro.service';
 import { CommonModule } from '@angular/common';
 import { ToastService } from '../../services/toast.service';
+import { Assunto } from '../../models/assunto';
+import { AssuntoService } from '../../services/assunto.service';
+import { LivroDto } from '../../models/livroDto';
 
 @Component({
   selector: 'app-livro',
@@ -13,15 +16,24 @@ import { ToastService } from '../../services/toast.service';
 })
 export class LivroComponent implements OnInit {
   @ViewChild('modalSave') model: ElementRef | undefined;
-  livroList: Livro[] = [];
+  livroList: LivroDto[] = [];
+  allAssuntos: Assunto[] = [];
   empService = inject(LivroService);
+  assuntoService = inject(AssuntoService);
   livroForm: FormGroup = new FormGroup({});
 
   constructor(private fb: FormBuilder, private toastService: ToastService) { }
   ngOnInit(): void {
     this.setFormState();
     this.getLivros();
+    this.loadAssuntos();
   }
+
+  loadAssuntos() {
+    this.assuntoService.getAllAssuntos()
+      .subscribe(data => this.allAssuntos = data);
+  }
+
   openModal() {
     const empModal = document.getElementById('modalSave');
     if (empModal != null) {
@@ -38,9 +50,8 @@ export class LivroComponent implements OnInit {
   }
   getLivros() {
     this.empService.getAllLivros().subscribe((res) => {
-
       this.livroList = res;
-    })
+    });
   }
   setFormState() {
     this.livroForm = this.fb.group({
@@ -49,6 +60,7 @@ export class LivroComponent implements OnInit {
       editora: ['', [Validators.required]],
       edicao: [1, [Validators.required]],
       anoPublicacao: [2025, [Validators.required]],
+      assuntoCods: [[]],
     });
   }
   formValues: any;
@@ -80,11 +92,11 @@ export class LivroComponent implements OnInit {
 
   }
 
-  OnEdit(Livro: Livro) {
+  OnEdit(Livro: LivroDto) {
     this.openModal();
     this.livroForm.patchValue(Livro);
   }
-  onDelete(livro: Livro) {
+  onDelete(livro: LivroDto) {
     const isConfirm = confirm("Tem certeza que deseja remover o livro " + livro.titulo);
     if (isConfirm) {
       this.empService.deleteLivro(livro.cod).subscribe((res) => {

@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Livro } from '../models/livro';
+import { LivroDto } from '../models/livroDto';
 import { environment } from '../environments/environment';
 
 @Injectable({
@@ -13,14 +14,13 @@ export class LivroService {
   http = inject(HttpClient);
 
   getAllLivros() {
-    return this.http.get<Livro[]>(this.apiUrl);
+    return this.http.get<LivroDto[]>(this.apiUrl);
   }
-
-  addLivro(data: any) {
-    return this.http.post(this.apiUrl, data);
+  addLivro(data: LivroDto) {
+    return this.http.post<LivroDto>(this.apiUrl, data);
   }
-  updateLivro(livro: Livro) {
-    return this.http.put(`${this.apiUrl}/${livro.cod}`, livro);
+  updateLivro(livro: LivroDto) {
+    return this.http.put<LivroDto>(`${this.apiUrl}/${livro.cod}`, livro);
   }
   deleteLivro(id: number) {
     return this.http.delete(`${this.apiUrl}/${id}`);

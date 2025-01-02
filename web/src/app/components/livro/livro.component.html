@@ -6,11 +6,15 @@
     <button class="btn btn-success" (click)="openModal()"> Cadastrar Livro</button>
   </div>
 </div>
-@if (livroList && livroList.length > 0) { <table class="table table-bordered table-striped">
+@if (livroList && livroList.length > 0) {
+<table class="table table-bordered table-striped">
   <thead>
     <tr>
       <th>Cod.</th>
-      <th>Descrição</th>
+      <th>Título</th>
+      <th>Editora</th>
+      <th>Edição</th>
+      <th>Ano de Publicação</th>
       <th class="text-end">Ações</th>
     </tr>
   </thead>
@@ -19,9 +23,12 @@
     <tr>
       <td>{{ item.cod }}</td>
       <td>{{ item.titulo }}</td>
+      <td>{{ item.editora }}</td>
+      <td>{{ item.edicao }}</td>
+      <td>{{ item.anoPublicacao }}</td>
       <td class="text-end">
-        <button class="btn btn-primary mx-1" (click)="OnEdit(item)"> Editar</button>
-        <button class="btn btn-danger " (click)="onDelete(item)"> Remover</button>
+        <button class="btn btn-primary mx-1" (click)="OnEdit(item)">Editar</button>
+        <button class="btn btn-danger" (click)="onDelete(item)">Remover</button>
       </td>
     </tr>
     }
@@ -65,6 +72,12 @@
               <label for="edicao" class="form-label">Ano de Publicação:</label>
               <input type="number" formControlName="anoPublicacao" name="anoPublicacao" class="form-control"
                 placeholder="ano de publicação" />
+            </div>
+            <div class="col-12">
+              <label for="assuntos" class="form-label">Assuntos:</label>
+              <select formControlName="assuntoCods" name="assuntos" multiple class="form-control">
+                <option *ngFor="let assunto of allAssuntos" [value]="assunto.cod">{{ assunto.descricao }}</option>
+              </select>
             </div>
           </div>
         </div>

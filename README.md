@@ -656,6 +656,7 @@ Programar UIs de CRUDs com validações e comitar conforme for avançando.
 - CRUD Livro.
   - Dropdown múltipla escolha para autores e assuntos.
   - Tabela com campos para preço por formas de compra.
+  - Ao menos um assunto deve ser selecionado no cadastro/edição do livro.
 - Relatório
   - Com View do banco depois que migrar para SQLite.
 - Banco

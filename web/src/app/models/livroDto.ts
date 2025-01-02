@@ -1,8 +1,8 @@
-export interface Livro {
+export interface LivroDto {
   cod: number;
   titulo: string;
   editora: string;
-  edicao: number;
+  edicao: number | null;
   anoPublicacao: number;
   assuntoCods: number[];
 }

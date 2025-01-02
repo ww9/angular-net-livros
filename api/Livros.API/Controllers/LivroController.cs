@@ -3,6 +3,7 @@ using Livros.Application.Services;
 using Livros.Data.Entities;
 using Livros.API.Helpers;
 using Livros.Application.Errors;
+using Livros.Application.Dtos;
 
 namespace Livros.API.Controllers;
 
@@ -15,19 +16,6 @@ public class LivroController : ControllerBase
     public LivroController(ILivroService livroService)
     {
         _service = livroService;
-    }
-
-    // CREATE
-    [HttpPost]
-    public async Task<IActionResult> Create([FromBody] Livro livro)
-    {
-        if (livro == null)
-        {
-            return BadRequest();
-        }
-
-        var createdLivro = await _service.CreateAsync(livro);
-        return Ok(new { cod = createdLivro.Cod });
     }
 
     // READ (by cod)
@@ -51,15 +39,27 @@ public class LivroController : ControllerBase
         return Ok(livros);
     }
 
-    // UPDATE
-    [HttpPut("{cod}")]
-    public async Task<IActionResult> UpdateAsync(int cod, [FromBody] Livro livro)
+    // CREATE
+    [HttpPost]
+    public async Task<IActionResult> CreateAsync([FromBody] LivroDto livroDto)
     {
-        if (livro == null || livro.Cod != cod)
+        if (livroDto == null)
         {
             return BadRequest();
         }
-        var updatedLivro = await _service.UpdateAsync(livro);
+        var created = await _service.CreateAsync(livroDto);
+        return Ok(created);
+    }
+
+    // UPDATE
+    [HttpPut("{cod}")]
+    public async Task<IActionResult> UpdateAsync(int cod, [FromBody] LivroDto livroDto)
+    {
+        if (livroDto == null || livroDto.Cod != cod)
+        {
+            return BadRequest();
+        }
+        var updatedLivro = await _service.UpdateAsync(livroDto);
         return Ok(updatedLivro);
     }
 

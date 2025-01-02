@@ -1,13 +1,14 @@
+using Livros.Application.Dtos;
 using Livros.Data.Entities;
 
 namespace Livros.Application.Services;
 
 public interface ILivroService
 {
-	Task<Livro> CreateAsync(Livro livro);
-	Task<Livro> GetByCodAsync(int cod);
-	Task<List<Livro>> GetAllAsync();
-	Task<Livro> UpdateAsync(Livro livro);
+	Task<LivroDto> CreateAsync(LivroDto livro);
+	Task<LivroDto> GetByCodAsync(int cod);
+	Task<List<LivroDto>> GetAllAsync();
+	Task<LivroDto> UpdateAsync(LivroDto dto);
 	Task<bool> DeleteAsync(int cod);
-	IEnumerable<Livro> GetRandomLivros();
+	IEnumerable<LivroDto> GetRandomLivros();
 }

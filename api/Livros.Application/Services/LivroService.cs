@@ -1,3 +1,4 @@
+using Livros.Application.Dtos;
 using Livros.Data;
 using Livros.Data.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -15,47 +16,117 @@ public class LivroService : ILivroService
 		_context = context;
 	}
 
-	public IEnumerable<Livro> GetRandomLivros()
+	public IEnumerable<LivroDto> GetRandomLivros()
 	{
-		return Enumerable.Range(1, 5).Select(index => new Livro
+		return Enumerable.Range(1, 5).Select(index => new LivroDto
 		{
 			Titulo = $"Livro {index}",
 			Editora = $"Editora {index}",
 			Edicao = index,
 			AnoPublicacao = 2000 + index
-		}).ToArray();
+		});
 	}
 
-	public async Task<Livro> CreateAsync(Livro livro)
+	public async Task<LivroDto> CreateAsync(LivroDto dto)
 	{
+		var livro = new Livro
+		{
+			Titulo = dto.Titulo,
+			Editora = dto.Editora,
+			Edicao = dto.Edicao,
+			AnoPublicacao = dto.AnoPublicacao
+		};
 		_context.Livros.Add(livro);
 		await _context.SaveChangesAsync();
-		return livro;
+
+		// Link Assuntos
+		await UpdateLivroAssuntosAsync(livro, dto.AssuntoCods);
+		return new LivroDto
+		{
+			Cod = livro.Cod,
+			Titulo = livro.Titulo,
+			Editora = livro.Editora,
+			Edicao = livro.Edicao,
+			AnoPublicacao = livro.AnoPublicacao,
+			AssuntoCods = dto.AssuntoCods
+		};
 	}
 
-	public async Task<Livro> GetByCodAsync(int cod)
+	public async Task<LivroDto> GetByCodAsync(int cod)
 	{
-		return await _context.Livros
-			 .Include(l => l.LivroAutores).ThenInclude(la => la.Autor)
-			 .Include(l => l.LivroAssuntos).ThenInclude(las => las.Assunto)
+		var livro = await _context.Livros
+			 .Include(l => l.LivroAssuntos)
 			 .FirstOrDefaultAsync(l => l.Cod == cod);
+		if (livro == null) return null!;
+		return new LivroDto
+		{
+			Cod = livro.Cod,
+			Titulo = livro.Titulo,
+			Editora = livro.Editora,
+			Edicao = livro.Edicao,
+			AnoPublicacao = livro.AnoPublicacao,
+			AssuntoCods = livro.LivroAssuntos?.Select(a => a.AssuntoCod).ToList() ?? new List<int>()
+		};
 	}
 
-	public async Task<List<Livro>> GetAllAsync()
+	public async Task<List<LivroDto>> GetAllAsync()
 	{
-		return await _context.Livros
-			 .Include(l => l.LivroAutores).ThenInclude(la => la.Autor)
-			 .Include(l => l.LivroAssuntos).ThenInclude(las => las.Assunto)
+		var livros = await _context.Livros
+			 .Include(l => l.LivroAssuntos)
 			 .ToListAsync();
+
+		return livros.Select(l => new LivroDto
+		{
+			Cod = l.Cod,
+			Titulo = l.Titulo,
+			Editora = l.Editora,
+			Edicao = l.Edicao,
+			AnoPublicacao = l.AnoPublicacao,
+			AssuntoCods = l.LivroAssuntos?.Select(a => a.AssuntoCod).ToList() ?? new List<int>()
+		}).ToList();
 	}
 
-	public async Task<Livro> UpdateAsync(Livro livro)
+	public async Task<LivroDto> UpdateAsync(LivroDto dto)
 	{
+		var livro = await _context.Livros.FirstOrDefaultAsync(l => l.Cod == dto.Cod);
+		if (livro == null) throw new Exception("Livro not found.");
+
+		livro.Titulo = dto.Titulo;
+		livro.Editora = dto.Editora;
+		livro.Edicao = dto.Edicao;
+		livro.AnoPublicacao = dto.AnoPublicacao;
+
 		_context.Livros.Update(livro);
 		await _context.SaveChangesAsync();
-		return livro;
-	}
 
+		// Re-link Assuntos
+		await UpdateLivroAssuntosAsync(livro, dto.AssuntoCods);
+
+		return new LivroDto
+		{
+			Cod = livro.Cod,
+			Titulo = livro.Titulo,
+			Editora = livro.Editora,
+			Edicao = livro.Edicao,
+			AnoPublicacao = livro.AnoPublicacao,
+			AssuntoCods = dto.AssuntoCods
+		};
+	}
+	private async Task UpdateLivroAssuntosAsync(Livro livro, List<int> assuntoCods)
+	{
+		var existingLinks = _context.LivroAssuntos.Where(la => la.LivroCod == livro.Cod);
+		_context.LivroAssuntos.RemoveRange(existingLinks);
+
+		foreach (var assuntoCod in assuntoCods)
+		{
+			_context.LivroAssuntos.Add(new LivroAssunto
+			{
+				LivroCod = livro.Cod,
+				AssuntoCod = assuntoCod
+			});
+		}
+		await _context.SaveChangesAsync();
+	}
 	public async Task<bool> DeleteAsync(int cod)
 	{
 		var livro = await _context.Livros.FindAsync(cod);
