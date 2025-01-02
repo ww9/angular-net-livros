@@ -70,26 +70,32 @@ public class LivroService : ILivroService
 	{
 		var autores = new List<Autor>
 		{
-			new Autor { Nome = "Autor 1" },
-			new Autor { Nome = "Autor 2" }
+			new Autor { Nome = "J. R. R. Tolkien" },
+			new Autor { Nome = "Miguel de Cervantes Saavedra" }
 		};
 
 		var livros = new List<Livro>
 		{
-			new Livro { Titulo = "Livro 1", Editora = "Editora 1", AnoPublicacao = 2021, Edicao = 1 },
-			new Livro { Titulo = "Livro 2", Editora = "Editora 2", AnoPublicacao = 2022, Edicao = 1 }
+			new Livro { Titulo = "O Senhor dos Anéis", Editora = "Allen & Unwin", AnoPublicacao = 1954, Edicao = 1 },
+			new Livro { Titulo = "Dom Quixote", Editora = "Livraria José Olympio Editora", AnoPublicacao = 1952, Edicao = 1 }
 		};
 
 		var assuntos = new List<Assunto>
 		{
-			new Assunto { Descricao = "Assunto 1" },
-			new Assunto { Descricao = "Assunto 2" }
+			new Assunto { Descricao = "Ficção" },
+			new Assunto { Descricao = "Aventura" },
+			new Assunto { Descricao = "Romance"},
+			new Assunto { Descricao = "Auto ajuda" },
+			new Assunto { Descricao = "Terror" },
+			new Assunto { Descricao = "Fantasia" },
 		};
 
 		var formacompras = new List<FormaCompra>
 		{
-			new FormaCompra { Descricao = "FormaCompra 1" },
-			new FormaCompra { Descricao = "FormaCompra 2" }
+			new FormaCompra { Descricao = "Balcão" },
+			new FormaCompra { Descricao = "Self-service" },
+			new FormaCompra { Descricao = "Internet" },
+			new FormaCompra { Descricao = "Evento" }
 		};
 
 		_context.Autores.AddRange(autores);
