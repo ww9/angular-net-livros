@@ -24,5 +24,6 @@ public class Livro
 
     public virtual ICollection<LivroAutor>? LivroAutores { get; set; }
     public virtual ICollection<LivroAssunto>? LivroAssuntos { get; set; }
+    public virtual ICollection<FormaCompra>? FormaCompras { get; set; }
 }
 

@@ -1,24 +1,24 @@
 <div class="row py-2 bg-gradient mt-2 mx-0 rounded-top-2">
   <div class="col-6">
-    <h3>Autors</h3>
+    <h3>Formas de Compras</h3>
   </div>
   <div class="col-6 text-end">
-    <button class="btn btn-success" (click)="openModal()"> Cadastrar Autor</button>
+    <button class="btn btn-success" (click)="openModal()"> Cadastrar Forma de Compra</button>
   </div>
 </div>
-@if (autorList && autorList.length > 0) { <table class="table table-bordered table-striped">
+@if (formacompraList && formacompraList.length > 0) { <table class="table table-bordered table-striped">
   <thead>
     <tr>
       <th>Cod.</th>
-      <th>Nome</th>
+      <th>Descrição</th>
       <th class="text-end">Ações</th>
     </tr>
   </thead>
   <tbody>
-    @for (item of autorList; track $index) {
+    @for (item of formacompraList; track $index) {
     <tr>
       <td>{{ item.cod }}</td>
-      <td>{{ item.nome }}</td>
+      <td>{{ item.descricao }}</td>
       <td class="text-end">
         <button class="btn btn-primary mx-1" (click)="OnEdit(item)"> Editar</button>
         <button class="btn btn-danger " (click)="onDelete(item)"> Remover</button>
@@ -28,7 +28,7 @@
   </tbody>
 </table>
 }@else {
-<h5 class="text-center p-5">Nenhum autor encontrado</h5>
+<h5 class="text-center p-5">Nenhuma forma de compra encontrada</h5>
 }
 
 <div class="modal bg-black bg-opacity-50" id="modalSave" #modalSave>
@@ -37,31 +37,31 @@
 
       <!-- Modal Header -->
       <div class="modal-header bg-info-subtle">
-        @if(autorForm.value.cod != 0)
+        @if(formacompraForm.value.cod != 0)
         {
-        <h4 class="modal-title">Alterar Autor</h4>
+        <h4 class="modal-title">Alterar Forma de Compra</h4>
         }@else {
-        <h4 class="modal-title">Cadastrar Autor</h4>
+        <h4 class="modal-title">Cadastrar Forma de Compra</h4>
         }
 
         <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="closeModal()"></button>
       </div>
-      <form [formGroup]="autorForm" (ngSubmit)="onSubmit()">
+      <form [formGroup]="formacompraForm" (ngSubmit)="onSubmit()">
         <div class="modal-body">
           <div class="row">
             <div class="col-12">
-              <input type="text" formControlName="nome" nome="name" class="form-control"
-                placeholder="...digite o nome do autor" />
+              <input type="text" formControlName="descricao" descricao="name" class="form-control"
+                placeholder="...digite a Descrição da Forma de Compra" />
             </div>
           </div>
         </div>
 
         <div class="modal-footer">
-          @if (autorForm.value.cod == 0) {
-          <button type="submit" [disabled]="this.autorForm.invalid" class="btn btn-primary"
+          @if (formacompraForm.value.cod == 0) {
+          <button type="submit" [disabled]="this.formacompraForm.invalid" class="btn btn-primary"
             data-bs-dismiss="modal">Cadastrar</button>
           }@else {
-          <button type="submit" [disabled]="this.autorForm.invalid" class="btn btn-success"
+          <button type="submit" [disabled]="this.formacompraForm.invalid" class="btn btn-success"
             data-bs-dismiss="modal">Atualizar</button>
           }
 

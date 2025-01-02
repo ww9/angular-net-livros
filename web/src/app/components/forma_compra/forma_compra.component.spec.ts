@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FormaComponent } from './forma.component';
+import { FormaCompraComponent } from './forma_compra.component';
 
 describe('FormaComponent', () => {
-  let component: FormaComponent;
-  let fixture: ComponentFixture<FormaComponent>;
+  let component: FormaCompraComponent;
+  let fixture: ComponentFixture<FormaCompraComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FormaComponent]
+      imports: [FormaCompraComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
-    fixture = TestBed.createComponent(FormaComponent);
+    fixture = TestBed.createComponent(FormaCompraComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

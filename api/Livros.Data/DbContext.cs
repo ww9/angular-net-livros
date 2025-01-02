@@ -8,8 +8,10 @@ public class LivrosContext : DbContext
     public DbSet<Livro> Livros { get; set; }
     public DbSet<Autor> Autores { get; set; }
     public DbSet<Assunto> Assuntos { get; set; }
+    public DbSet<FormaCompra> FormaCompras { get; set; }
     public DbSet<LivroAutor> LivroAutores { get; set; }
     public DbSet<LivroAssunto> LivroAssuntos { get; set; }
+    public DbSet<LivroFormaCompra> LivroFormaCompras { get; set; }
 
     public LivrosContext(DbContextOptions<LivrosContext> options)
         : base(options)

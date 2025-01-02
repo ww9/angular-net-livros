@@ -69,42 +69,56 @@ public class LivroService : ILivroService
 	public void SeedDatabase()
 	{
 		var autores = new List<Autor>
-		  {
-				new Autor { Nome = "Autor 1" },
-				new Autor { Nome = "Autor 2" }
-		  };
+		{
+			new Autor { Nome = "Autor 1" },
+			new Autor { Nome = "Autor 2" }
+		};
 
 		var livros = new List<Livro>
-		  {
-				new Livro { Titulo = "Livro 1", Editora = "Editora 1", AnoPublicacao = 2021, Edicao = 1 },
-				new Livro { Titulo = "Livro 2", Editora = "Editora 2", AnoPublicacao = 2022, Edicao = 1 }
-		  };
+		{
+			new Livro { Titulo = "Livro 1", Editora = "Editora 1", AnoPublicacao = 2021, Edicao = 1 },
+			new Livro { Titulo = "Livro 2", Editora = "Editora 2", AnoPublicacao = 2022, Edicao = 1 }
+		};
 
 		var assuntos = new List<Assunto>
-		  {
-				new Assunto { Descricao = "Assunto 1" },
-				new Assunto { Descricao = "Assunto 2" }
-		  };
+		{
+			new Assunto { Descricao = "Assunto 1" },
+			new Assunto { Descricao = "Assunto 2" }
+		};
+
+		var formacompras = new List<FormaCompra>
+		{
+			new FormaCompra { Descricao = "FormaCompra 1" },
+			new FormaCompra { Descricao = "FormaCompra 2" }
+		};
 
 		_context.Autores.AddRange(autores);
 		_context.Livros.AddRange(livros);
 		_context.Assuntos.AddRange(assuntos);
+		_context.FormaCompras.AddRange(formacompras);
 		_context.SaveChanges();
 
 		var livroAutores = new List<LivroAutor>
-		  {
-				new LivroAutor { LivroCod = livros[0].Cod, AutorCod = autores[0].Cod },
-				new LivroAutor { LivroCod = livros[1].Cod, AutorCod = autores[1].Cod }
-		  };
+		{
+			new LivroAutor { LivroCod = livros[0].Cod, AutorCod = autores[0].Cod },
+			new LivroAutor { LivroCod = livros[1].Cod, AutorCod = autores[1].Cod }
+		};
 
 		var livroAssuntos = new List<LivroAssunto>
-		  {
-				new LivroAssunto { LivroCod = livros[0].Cod, AssuntoCod = assuntos[0].Cod },
-				new LivroAssunto { LivroCod = livros[1].Cod, AssuntoCod = assuntos[1].Cod }
-		  };
+		{
+			new LivroAssunto { LivroCod = livros[0].Cod, AssuntoCod = assuntos[0].Cod },
+			new LivroAssunto { LivroCod = livros[1].Cod, AssuntoCod = assuntos[1].Cod }
+		};
+
+		var livroFormaCompras = new List<LivroFormaCompra>
+		{
+			new LivroFormaCompra { LivroCod = livros[0].Cod, FormaCompraCod = formacompras[0].Cod, Valor = 10.0 },
+			new LivroFormaCompra { LivroCod = livros[1].Cod, FormaCompraCod = formacompras[1].Cod, Valor = 20.0 }
+		};
 
 		_context.LivroAutores.AddRange(livroAutores);
 		_context.LivroAssuntos.AddRange(livroAssuntos);
+		_context.LivroFormaCompras.AddRange(livroFormaCompras);
 		_context.SaveChanges();
 
 		// Clear entities to avoid cyclic reference

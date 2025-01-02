@@ -626,33 +626,33 @@ Execute o servidor novamente com `ng serve` e se tudo estiver certo, o bootstrap
 
 Se tudo estiver certo, comite as alterações.
 
-# Criar componentes, serviços e interfaces iniciais para livro, autor e assunto
+# Criar componentes, serviços e interfaces iniciais para livro, autor, assunto e froma de compras
 
 ```bash
 ng generate component components/livro
 ng generate component components/autor
 ng generate component components/assunto
-ng generate component components/forma
+ng generate component components/forma_compra
 ng generate component components/relatorio_por_autor
 
 ng generate service services/livro
 ng generate service services/autor
 ng generate service services/assunto
-ng generate service services/forma
+ng generate service services/forma_compra
 ng generate service services/relatorio_por_autor
 
 ng generate interface interfaces/livro
 ng generate interface interfaces/autor
 ng generate interface interfaces/assunto
-ng generate interface interfaces/forma
+ng generate interface interfaces/forma_compra
 ng generate interface interfaces/relatorio_por_autor
 ```
 
 # TODO
 
-- Comentar métodos das Controllers da API para incrementar documentação do Swagger.
-- Cobertura de código C# com CLI (já funciona no VSCode).
-- Testes end to end no Angular.
 - Implementar preço do livro dependendo da forma de compra.
 - Implementar relatório com View do banco. Isso requer um banco de dados relacional. Pode ser o SQLite.
 - Paginação nas GRIDs.
+- Cobertura de código C# com CLI (já funciona no VSCode).
+- Comentar métodos das Controllers da API para incrementar documentação do Swagger.
+- Testes end to end no Angular.

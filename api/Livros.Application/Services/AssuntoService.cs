@@ -33,21 +33,6 @@ public class AssuntoService : IAssuntoService
 		return assunto;
 	}
 
-	public async Task<Assunto> GetByCodAsync(int cod)
-	{
-		return await _context.Assuntos
-			 .Include(a => a.LivroAssuntos).ThenInclude(las => las.Livro)
-			 .FirstOrDefaultAsync(a => a.Cod == cod);
-	}
-
-	// READ (all)
-	public async Task<List<Assunto>> GetAllAsync()
-	{
-		return await _context.Assuntos
-			 .Include(a => a.LivroAssuntos).ThenInclude(las => las.Livro)
-			 .ToListAsync();
-	}
-
 	// UPDATE
 	public async Task<Assunto> UpdateAsync(Assunto assunto)
 	{
@@ -65,6 +50,21 @@ public class AssuntoService : IAssuntoService
 		_context.Assuntos.Update(assunto);
 		await _context.SaveChangesAsync();
 		return assunto;
+	}
+
+	public async Task<Assunto> GetByCodAsync(int cod)
+	{
+		return await _context.Assuntos
+			 .Include(a => a.LivroAssuntos).ThenInclude(las => las.Livro)
+			 .FirstOrDefaultAsync(a => a.Cod == cod);
+	}
+
+	// READ (all)
+	public async Task<List<Assunto>> GetAllAsync()
+	{
+		return await _context.Assuntos
+			 .Include(a => a.LivroAssuntos).ThenInclude(las => las.Livro)
+			 .ToListAsync();
 	}
 
 	// DELETE

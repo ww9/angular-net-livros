@@ -3,7 +3,7 @@ import { HomeComponent } from './components/home/home.component';
 import { LivroComponent } from './components/livro/livro.component';
 import { AssuntoComponent } from './components/assunto/assunto.component';
 import { AutorComponent } from './components/autor/autor.component';
-import { FormaComponent } from './components/forma/forma.component';
+import { FormaCompraComponent } from './components/forma_compra/forma_compra.component';
 import { RelatorioPorAutorComponent } from './components/relatorio-por-autor/relatorio-por-autor.component';
 
 export const routes: Routes = [
@@ -20,7 +20,7 @@ export const routes: Routes = [
     path: "autor", component: AutorComponent
   },
   {
-    path: "forma", component: FormaComponent
+    path: "forma_compra", component: FormaCompraComponent
   },
   {
     path: "relatorio_por_autor", component: RelatorioPorAutorComponent
